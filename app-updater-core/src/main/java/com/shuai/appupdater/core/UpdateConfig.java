@@ -15,7 +15,7 @@ public class UpdateConfig implements Parcelable {
     private String mUrl;                //下载路径
     private String mPath;               //文件保存路径
     private String mFilename;           //保存文件名
-    private String mFileMD5;            //要下载apk的md5
+    private String mFileMD5;            //要下载apk的md5.如果不配置md5,则不校验。若配置下载apk的md5，校验不通过则无法安装。
 
     private boolean isShowNotification = true;      //是否显示通知栏.默认是
     private boolean isInstallApk = true;            //下载完成后是否自动弹出安装.默认是

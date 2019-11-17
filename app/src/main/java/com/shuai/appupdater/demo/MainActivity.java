@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
 
-    private String mUrl = "https://b6.market.xiaomi.com/download/AppStore/0f9d947609a19a48069dcef4106f4dea13540ed9f/com.ss.android.article.lite.apk";
+    private String mUrl = "http://7jpqno.com2.z0.glb.clouddn.com/motion/1573991245851/App_Updater.apk";
 
     private ProgressBar progressBar;
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         UpdateConfig config = new UpdateConfig();
         config.setSound(true);
         config.setUrl(mUrl);
-        config.addHeader("token", "xxxxxx");
+        config.addHeader("token", "abcdef");
         mAppUpdater = new AppUpdater(getContext(), config)
                 .setUpdateCallback(new UpdateCallback() {
 
@@ -163,18 +163,20 @@ public class MainActivity extends AppCompatActivity {
      */
     private void clickStartDialog() {
 
+        /**设置升级功能配置*/
         UpdateConfig config = new UpdateConfig();
         config.setUrl(mUrl);
-//        config.setFileMD5("75E9EC2D28780E206DE8AD2068461664");
-        config.setVersionCode(721);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
+        config.setFileMD5("75E9EC2D28780E206DE8AD2068461664");
+        config.setVersionCode(1);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
         config.addHeader("token", "xxxxxx");
-        config.setReDownload(true);
+        config.setReDownload(false);
 
 
+        /**设置更新弹框的配置*/
         UpdateBean bean = new UpdateBean();
         bean.setUpdate(true);
         bean.setForce(false);
-        bean.setNewAppVersion("1.2.3");
+        bean.setNewAppVersion("1.0.0");
         bean.setNewAppUpdateLog(
                         "1、优化系统性能\n" +
                         "2、bug都是petter写的\n" +
@@ -182,10 +184,9 @@ public class MainActivity extends AppCompatActivity {
                         "4、吊炸天的帅气\n" +
                         "5、上官婉儿无敌帅\n" );
 //        bean.setNewAppUpdateDialogTitle("又要升级了，你准备好了吗？");
-        bean.setNewAppSize("100M");
+        bean.setNewAppSize("20.5M");
         UpdateManager build = new UpdateManager
                 .Builder()
-                //当前Activity
                 .setActivity(this)
                 .setUpdateConfig(config)
                 .setUpdateBean(bean)

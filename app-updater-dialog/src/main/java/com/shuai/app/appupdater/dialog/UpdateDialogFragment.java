@@ -356,6 +356,15 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
      * @param file
      */
     private void installApp(File file){
+
+        //TODO 安装前是需要校验MD5的
+        if (!TextUtils.isEmpty(mUpdateConfig.getFileMD5())){
+            if (!AppUtils.INSTANCE.checkApkMd5(mUpdateConfig.getFileMD5(),file)){
+                Toast.makeText(mActivity, "MD5校验不通过", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         String authority = mUpdateConfig.getAuthority();
         if(TextUtils.isEmpty(authority)){//如果为空则默认
             authority = getContext().getPackageName() + ".fileProvider";

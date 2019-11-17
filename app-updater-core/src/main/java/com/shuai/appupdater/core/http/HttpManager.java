@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.shuai.appupdater.core.constant.Constants;
+import com.shuai.appupdater.core.util.AppUtils;
 import com.shuai.appupdater.core.util.Md5Util;
 import com.shuai.appupdater.core.util.SSLSocketFactoryUtils;
 
@@ -147,9 +148,10 @@ public class HttpManager implements IHttpManager {
 
                     Log.d("被下载文件的MD5 --> ", Md5Util.getFileMD5(file));
 
+                    // TODO 考虑要在这个位置去校验吗？
                     if (!TextUtils.isEmpty(fileMd5)){//fileMd5不为空，则校验md5
-                        if (!fileMd5.equals(Md5Util.getFileMD5(file))){
-                            throw new Exception("MD5错误，下载失败");
+                        if (!AppUtils.INSTANCE.checkApkMd5(fileMd5,file)){
+                            throw new Exception("MD5校验不通过");
                         }
                     }
 

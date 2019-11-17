@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.shuai.app.updater.R;
 import com.shuai.appupdater.core.UpdateConfig;
@@ -127,6 +128,13 @@ public class DownloadService extends Service {
                             String authority = config.getAuthority();
                             if(TextUtils.isEmpty(authority)){//如果为空则默认
                                 authority = getContext().getPackageName() + ".fileProvider";
+                            }
+                            //TODO : 安装之前校验MD5.考虑是否将校验写在checkApkMd5中
+                            if (!TextUtils.isEmpty(config.getFileMD5())){
+                                if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
+                                    Toast.makeText(getContext(), "MD5校验不通过", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
                             AppUtils.INSTANCE.installApk(getContext(),mFile,authority);
                         }
@@ -291,6 +299,9 @@ public class DownloadService extends Service {
             isDownloading = false;
             showFinishNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
             if(isInstallApk){
+
+                //TODO 这里校验MD5
+
                 AppUtils.INSTANCE.installApk(getContext(),file,authority);
             }
             if(callback!=null){

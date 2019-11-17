@@ -16,8 +16,6 @@ public class UpdateBean implements Parcelable {
     private String newAppUpdateLog;         //更新日志："1、优化性能\n 2、修复bug"
     private String newAppUpdateDialogTitle; //配置dialog的title
     private String newAppSize;              //新app大小："100M"
-    private String newAppMd5;               //Md5   ："abcdefsadf"
-
 
     public UpdateBean() {
     }
@@ -62,15 +60,6 @@ public class UpdateBean implements Parcelable {
         this.newAppUpdateDialogTitle = newAppUpdateDialogTitle;
     }
 
-
-    public String getNewAppMd5() {
-        return newAppMd5;
-    }
-
-    public void setNewAppMd5(String newAppMd5) {
-        this.newAppMd5 = newAppMd5;
-    }
-
     public String getNewAppSize() {
         return newAppSize;
     }
@@ -89,7 +78,6 @@ public class UpdateBean implements Parcelable {
         newAppUpdateLog = in.readString();
         newAppUpdateDialogTitle = in.readString();
         newAppSize = in.readString();
-        newAppMd5 = in.readString();
     }
 
     public static final Creator<UpdateBean> CREATOR = new Creator<UpdateBean>() {
@@ -117,6 +105,5 @@ public class UpdateBean implements Parcelable {
         parcel.writeString(newAppUpdateLog);
         parcel.writeString(newAppUpdateDialogTitle);
         parcel.writeString(newAppSize);
-        parcel.writeString(newAppMd5);
     }
 }
