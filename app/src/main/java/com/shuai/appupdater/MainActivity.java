@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-
         PermissionUtils.INSTANCE.verifyReadAndWritePermissions(this, Constants.RE_CODE_STORAGE_PERMISSION);
     }
 
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 简单一键后台升级
+     * 后台升级
      */
     private void clickBtn1() {
         mAppUpdater = new AppUpdater(getContext(), mUrl);
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 一键下载并监听
+     * 下载并监听进度
      */
     private void clickBtn2() {
         UpdateConfig config = new UpdateConfig();
@@ -148,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 取消升级
+     */
     private void clickCancel() {
         if (mAppUpdater != null) {
             mAppUpdater.stop();
@@ -156,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void clickNew() {
-
-
 
         UpdateConfig config = new UpdateConfig();
         config.setSound(true);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnCancel:
                 clickCancel();
                 break;
-            case R.id.btnNewDialog:
+            case R.id.btnStartDialog:
                 clickNew();
                 break;
         }
