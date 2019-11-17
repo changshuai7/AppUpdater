@@ -33,25 +33,13 @@ import java.io.File;
 public class DownloadService extends Service {
 
     private DownloadBinder mDownloadBinder = new DownloadBinder();
-    /**
-     * 是否在下载，防止重复下载。
-     */
-    private boolean isDownloading;
-    /**
-     * 最后更新进度，用来降频刷新
-     */
-    private int mLastProgress = -1;
-    /**
-     * 最后进度更新时间，用来降频刷新
-     */
-    private long mLastTime;
-    /**
-     * 失败后重新下载次数
-     */
-    private int mCount = 0;
+
+    private boolean isDownloading;      //是否在下载，防止重复下载。
+    private int mLastProgress = -1;     //最后更新进度，用来降频刷新
+    private long mLastTime;             //最后进度更新时间，用来降频刷新
+    private int mCount = 0;             //失败后重新下载次数
 
     private IHttpManager mHttpManager;
-
     private File mFile;
 
     private Context getContext(){
@@ -62,7 +50,6 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if(intent != null){
-
             boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,false);
             if(isStop){
                 stopDownload();
@@ -74,9 +61,10 @@ public class DownloadService extends Service {
                 }
                 //获取配置信息
                 UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
+                //TODO :BUG:通过通知栏重试启动服务的，没法传递HttpManager和Callback。导致:外部传入HttpManager或者有进度回调的，无法生效。
                 startDownload(config,null,null);
             }else{
-                Log.w(Constants.TAG,"Please do not repeat the download.");
+                Log.d(Constants.TAG,"onStartCommand:请勿重复执行下载..");
             }
         }
 
@@ -104,7 +92,7 @@ public class DownloadService extends Service {
         }
 
         if(isDownloading){
-            Log.w(Constants.TAG,"Please do not repeat the download.");
+            Log.d(Constants.TAG,"startDownload:请勿重复执行下载..");
             return;
         }
 
@@ -428,11 +416,21 @@ public class DownloadService extends Service {
         notifyNotification(notifyId,notification);
     }
 
+    /**
+     * 显示下载出现错误时的通知。可以点击重试。
+     * @param notifyId
+     * @param channelId
+     * @param icon
+     * @param title
+     * @param content
+     * @param isReDownload
+     * @param config
+     */
     private void showErrorNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isReDownload,UpdateConfig config){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
         builder.setAutoCancel(true);
 
-        //TODO:此处有bug：下载失败以后，重新下载，无法回调下载进度。除了用EventBus等方式传递消息以外，暂无好的解决办法......
+        //TODO:此处有bug：下载失败以后，重新下载，无法回调下载进度。除了用EventBus等方式传递消息以外，暂无好的解决办法......同时也无法使用外部传入的HttpManager
 
         if(isReDownload){//重新下载
             Intent intent  = new Intent(getContext(),DownloadService.class);

@@ -1,4 +1,4 @@
-package com.shuai.appupdater;
+package com.shuai.appupdater.demo;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.shuai.app.appupdater.dialog.UpdateBean;
 import com.shuai.app.appupdater.dialog.UpdateManager;
+import com.shuai.appupdater.demo.R;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.AppUpdateCallback;
@@ -163,12 +164,11 @@ public class MainActivity extends AppCompatActivity {
     private void clickStartDialog() {
 
         UpdateConfig config = new UpdateConfig();
-        config.setSound(true);
         config.setUrl(mUrl);
 //        config.setFileMD5("75E9EC2D28780E206DE8AD2068461664");
-//        config.setVersionCode(721);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
+        config.setVersionCode(721);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
         config.addHeader("token", "xxxxxx");
-        config.setInstallApk(true);
+        config.setReDownload(true);
 
 
         UpdateBean bean = new UpdateBean();

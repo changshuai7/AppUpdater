@@ -163,8 +163,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
     }
 
     private void initData() {
-        mUpdateApp = (UpdateBean) getArguments().getSerializable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
-        mUpdateConfig = (UpdateConfig) getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
+        mUpdateApp = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
+        mUpdateConfig =  getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
 
         //设置主题色
         initTheme();
@@ -294,7 +294,6 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
                     @Override
                     public void onProgress(int progress, int total, boolean isChange) {
-                        Log.d("progress-------->",progress+"");
                         if (isChange) {
                             if (!UpdateDialogFragment.this.isRemoving()) {
                                 mNumberProgressBar.setVisibility(View.VISIBLE);

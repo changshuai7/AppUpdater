@@ -1,12 +1,13 @@
 package com.shuai.app.appupdater.dialog;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 /**
  * 版本信息
  */
-public class UpdateBean implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class UpdateBean implements Parcelable {
 
     private boolean isUpdate;   //是否有新版本（控制是否执行弹窗更新）
     private boolean isForce;    //是否强制更新
@@ -16,6 +17,10 @@ public class UpdateBean implements Serializable {
     private String newAppUpdateDialogTitle; //配置dialog的title
     private String newAppSize;              //新app大小："100M"
     private String newAppMd5;               //Md5   ："abcdefsadf"
+
+
+    public UpdateBean() {
+    }
 
     public boolean isUpdate() {
         return isUpdate;
@@ -72,5 +77,46 @@ public class UpdateBean implements Serializable {
 
     public void setNewAppSize(String newAppSize) {
         this.newAppSize = newAppSize;
+    }
+
+
+    //----------------------------
+
+    protected UpdateBean(Parcel in) {
+        isUpdate = in.readByte() != 0;
+        isForce = in.readByte() != 0;
+        newAppVersion = in.readString();
+        newAppUpdateLog = in.readString();
+        newAppUpdateDialogTitle = in.readString();
+        newAppSize = in.readString();
+        newAppMd5 = in.readString();
+    }
+
+    public static final Creator<UpdateBean> CREATOR = new Creator<UpdateBean>() {
+        @Override
+        public UpdateBean createFromParcel(Parcel in) {
+            return new UpdateBean(in);
+        }
+
+        @Override
+        public UpdateBean[] newArray(int size) {
+            return new UpdateBean[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte((byte) (isUpdate ? 1 : 0));
+        parcel.writeByte((byte) (isForce ? 1 : 0));
+        parcel.writeString(newAppVersion);
+        parcel.writeString(newAppUpdateLog);
+        parcel.writeString(newAppUpdateDialogTitle);
+        parcel.writeString(newAppSize);
+        parcel.writeString(newAppMd5);
     }
 }

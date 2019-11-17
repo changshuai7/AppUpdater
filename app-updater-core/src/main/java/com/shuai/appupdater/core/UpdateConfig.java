@@ -1,7 +1,6 @@
 package com.shuai.appupdater.core;
 
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
@@ -13,88 +12,25 @@ import java.util.Map;
 
 public class UpdateConfig implements Parcelable {
 
-    /**
-     * 下载路径
-     */
-    private String mUrl;
-    /**
-     * 保存路径
-     */
-    private String mPath;
-    /**
-     * 保存文件名
-     */
-    private String mFilename;
+    private String mUrl;                //下载路径
+    private String mPath;               //文件保存路径
+    private String mFilename;           //保存文件名
+    private String mFileMD5;            //要下载apk的md5
 
-    /**
-     * 下载apk的md5值
-     */
-    private String mFileMD5;
-
-    /**
-     * 是否显示通知栏
-     */
-    private boolean isShowNotification = true;
-    /**
-     * 下载完成后是否自动弹出安装
-     */
-    private boolean isInstallApk = true;
-    /**
-     * 通知栏图标：默认取app图标
-     */
-    private int mNotificationIcon;
-
-    /**
-     * 通知栏ID
-     */
-    private int mNotificationId = Constants.DEFAULT_NOTIFICATION_ID;
-
-    /**
-     * 通知栏渠道ID
-     */
-    private String mChannelId;
-    /**
-     * 通知栏渠道名称
-     */
-    private String mChannelName;
-    /**
-     *  默认{@link Context#getPackageName() + ".fileProvider"}
-     */
-    private String mAuthority;
-    /**
-     * 下载失败是否支持点击通知栏重复下载
-     */
-    private boolean isReDownload = true;
-    /**
-     * 是否显示百分比
-     */
-    private boolean isShowPercentage = true;
-
-    /**
-     * 是否震动提示，为true时使用通知默认震动
-     */
-    private boolean isVibrate;
-
-    /**
-     * 是否铃声提示,为true时使用通知默认铃声
-     */
-    private boolean isSound;
-
-    /**
-     * 要下载的APK的versionCode
-     */
-    private Integer versionCode;
-
-    /**
-     * 请求头参数
-     */
-    private Map<String,String> mRequestProperty;
-
-    /**
-     * 是否删除取消下载的文件
-     */
-    private boolean isDeleteCancelFile = true;
-
+    private boolean isShowNotification = true;      //是否显示通知栏.默认是
+    private boolean isInstallApk = true;            //下载完成后是否自动弹出安装.默认是
+    private int mNotificationIcon;                  //通知栏图标.默认取app图标
+    private int mNotificationId = Constants.DEFAULT_NOTIFICATION_ID;//通知栏ID
+    private String mChannelId;                      //通知栏渠道ID
+    private String mChannelName;                    //通知栏渠道名称
+    private String mAuthority;                      //默认{@link Context#getPackageName() + ".fileProvider"}
+    private boolean isReDownload = false;           //下载失败是否支持点击通知栏重复下载.默认false-->true有bug
+    private boolean isShowPercentage = true;        //是否显示百分比
+    private boolean isVibrate;                      //是否震动提示，为true时使用通知默认震动
+    private boolean isSound;                        //是否铃声提示,为true时使用通知默认铃声
+    private Integer mVersionCode;                   //要下载的APK的versionCode
+    private Map<String,String> mRequestProperty;    //下载请求头参数
+    private boolean isDeleteCancelFile = true;      //是否删除取消下载的文件
 
     public UpdateConfig() {
 
@@ -221,11 +157,11 @@ public class UpdateConfig implements Parcelable {
     }
 
     public Integer getVersionCode(){
-        return versionCode;
+        return mVersionCode;
     }
 
     public void setVersionCode(Integer versionCode){
-        this.versionCode = versionCode;
+        this.mVersionCode = versionCode;
     }
 
     public Map<String, String> getRequestProperty() {
@@ -248,7 +184,6 @@ public class UpdateConfig implements Parcelable {
         }
     }
 
-
     public boolean isDeleteCancelFile() {
         return isDeleteCancelFile;
     }
@@ -256,7 +191,6 @@ public class UpdateConfig implements Parcelable {
     public void setDeleteCancelFile(boolean deleteCancelFile) {
         isDeleteCancelFile = deleteCancelFile;
     }
-
 
     @Override
     public int describeContents() {
@@ -280,7 +214,7 @@ public class UpdateConfig implements Parcelable {
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
-        dest.writeValue(this.versionCode);
+        dest.writeValue(this.mVersionCode);
         dest.writeInt(mRequestProperty!=null ? this.mRequestProperty.size() : 0);
         if(mRequestProperty!=null){
             for (Map.Entry<String, String> entry : this.mRequestProperty.entrySet()) {
@@ -307,7 +241,7 @@ public class UpdateConfig implements Parcelable {
         this.isShowPercentage = in.readByte() != 0;
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;
-        this.versionCode = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.mVersionCode = (Integer) in.readValue(Integer.class.getClassLoader());
         int mRequestPropertySize = in.readInt();
         this.mRequestProperty = new HashMap<>(mRequestPropertySize);
         for (int i = 0; i < mRequestPropertySize; i++) {

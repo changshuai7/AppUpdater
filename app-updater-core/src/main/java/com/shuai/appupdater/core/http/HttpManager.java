@@ -145,7 +145,7 @@ public class HttpManager implements IHttpManager {
                     connect.disconnect();
 
 
-                    Log.d("MD5 -- > ", Md5Util.getFileMD5(file));
+                    Log.d("被下载文件的MD5 --> ", Md5Util.getFileMD5(file));
 
                     if (!TextUtils.isEmpty(fileMd5)){//fileMd5不为空，则校验md5
                         if (!fileMd5.equals(Md5Util.getFileMD5(file))){

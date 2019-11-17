@@ -15,8 +15,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.libVersionCode
-        versionName rootProject.ext.libVersionName
     }
 
     buildTypes {
@@ -35,16 +33,16 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //support
-    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    compileOnly "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
 }
 
 publish {
-    userOrg = 'shuai'
-    groupId = 'com.shuai'
+    userOrg = rootProject.ext.userOrg
+    groupId = rootProject.ext.groupId
     artifactId = 'app-updater-core'
-    publishVersion = '0.0.1'
+    publishVersion = rootProject.ext.publishVersion
     desc = 'a tools for android developer to check app version update'
     website = 'https://github.com/changshuai7/AppUpdater'
 }
+

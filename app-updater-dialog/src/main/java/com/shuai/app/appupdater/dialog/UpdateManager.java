@@ -148,7 +148,7 @@ public class UpdateManager {
             Bundle bundle = new Bundle();
             //添加信息，
             if (mUpdateBean!=null){
-                bundle.putSerializable(INTENT_KEY_UPDATE_BEAN, mUpdateBean);
+                bundle.putParcelable(INTENT_KEY_UPDATE_BEAN, mUpdateBean);
             }
             if (mThemeColor != 0) {
                 bundle.putInt(KEY_THEME, mThemeColor);

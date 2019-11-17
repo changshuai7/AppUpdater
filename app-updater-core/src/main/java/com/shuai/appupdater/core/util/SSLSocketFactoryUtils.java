@@ -104,11 +104,11 @@ public class SSLSocketFactoryUtils {
                         return null;
                     }
                     //获得服务器端证书
-                    TrustManager[] turstManager = getTurstManager(certificates);
+                    TrustManager[] trustManager = getTrustManager(certificates);
 
                     //初始化ssl证书库
                     try {
-                        sslContext.init(null,turstManager,new SecureRandom());
+                        sslContext.init(null,trustManager,new SecureRandom());
                     } catch (KeyManagementException e) {
                         e.printStackTrace();
                     }
@@ -126,7 +126,7 @@ public class SSLSocketFactoryUtils {
      * @param certificates
      * @return
      */
-    public static TrustManager[] getTurstManager(InputStream... certificates) {
+    public static TrustManager[] getTrustManager(InputStream... certificates) {
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
