@@ -47,6 +47,6 @@ publish {
     groupId = 'com.shuai'
     artifactId = 'app-updater-dialog'
     publishVersion = '0.0.1'
-    desc = 'a tools for android developer to check app version update with dialog'
-    website = 'https://github.com/changshuai7/XXXXX'//TODO
+    desc = 'a tools for android developer to check app version update with a dialog'
+    website = 'https://github.com/changshuai7/AppUpdater'
 }

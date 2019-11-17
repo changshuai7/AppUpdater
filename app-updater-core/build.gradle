@@ -46,5 +46,5 @@ publish {
     artifactId = 'app-updater-core'
     publishVersion = '0.0.1'
     desc = 'a tools for android developer to check app version update'
-    website = 'https://github.com/changshuai7/XXXXX'//TODO
+    website = 'https://github.com/changshuai7/AppUpdater'
 }

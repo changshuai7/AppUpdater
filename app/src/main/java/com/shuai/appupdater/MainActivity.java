@@ -157,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void clickNew() {
+    /**
+     * 启动默认弹框
+     */
+    private void clickStartDialog() {
 
         UpdateConfig config = new UpdateConfig();
         config.setSound(true);
@@ -172,7 +175,12 @@ public class MainActivity extends AppCompatActivity {
         bean.setUpdate(true);
         bean.setForce(false);
         bean.setNewAppVersion("1.2.3");
-        bean.setNewAppUpdateLog("1、优化系统性能\n2、bug都是petter写的\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n1、优化系统性能\n");
+        bean.setNewAppUpdateLog(
+                        "1、优化系统性能\n" +
+                        "2、bug都是petter写的\n" +
+                        "3、CS最帅\n" +
+                        "4、吊炸天的帅气\n" +
+                        "5、上官婉儿无敌帅\n" );
 //        bean.setNewAppUpdateDialogTitle("又要升级了，你准备好了吗？");
         bean.setNewAppSize("100M");
         UpdateManager build = new UpdateManager
@@ -202,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 clickCancel();
                 break;
             case R.id.btnStartDialog:
-                clickNew();
+                clickStartDialog();
                 break;
         }
     }

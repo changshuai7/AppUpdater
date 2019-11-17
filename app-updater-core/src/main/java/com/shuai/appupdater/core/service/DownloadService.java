@@ -431,6 +431,9 @@ public class DownloadService extends Service {
     private void showErrorNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isReDownload,UpdateConfig config){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
         builder.setAutoCancel(true);
+
+        //TODO:此处有bug：下载失败以后，重新下载，无法回调下载进度。除了用EventBus等方式传递消息以外，暂无好的解决办法......
+
         if(isReDownload){//重新下载
             Intent intent  = new Intent(getContext(),DownloadService.class);
             intent.putExtra(Constants.KEY_RE_DOWNLOAD,true);

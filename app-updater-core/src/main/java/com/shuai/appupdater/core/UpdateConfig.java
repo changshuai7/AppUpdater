@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class UpdateConfig implements Parcelable {
 
-
+    /**
+     * 下载路径
+     */
     private String mUrl;
     /**
      * 保存路径
