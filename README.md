@@ -35,11 +35,12 @@ dependencies {
 
 如果你想直接使用为你写好的一个稳定美观的弹窗，除了依赖core库以外，还需要依赖dialog库。dialog库高度封装了一个版本升级的弹窗，使用非常便捷。
 
-### 3.前提
+### 2.前提
 
 由于涉及到下载功能，请提前申请存储权限
 
-### 2.核心库core的使用
+## 三、使用
+### 1.核心库core的使用
 #### 简易使用：
 
 ```
@@ -134,7 +135,7 @@ mAppUpdater.setHttpManager(new IHttpManager() {
 });
 ```
 
-### 3.扩展库dialog的使用
+### 2.扩展库dialog的使用
 核心库中只封装了版本更新的功能，并未对弹窗UI做任何的封装。
 **这样也使得UI部分和版本升级功能部分实现了彻底解耦。**
 为了方便集成和快速使用，扩展库dialog内则封装了一个可使用的稳定的dialog。可以不用做任何UI的工作，完成版本升级的集成。
@@ -270,3 +271,12 @@ UpdateManager build = new UpdateManager
         .build();
 build.start();
 ```
+
+## 四、常见问题
+##### 1、Cleartext HTTP traffic to xxx not permitted错误
+这是因为你的下载连接为HTTP类型而非HTTPS的。建议在AndroidManifest.xml配置文件的<application>标签中直接插入
+```
+android:usesCleartextTraffic="true"
+```
+详情请查阅：https://blog.csdn.net/gengkui9897/article/details/82863966
+
