@@ -43,3 +43,6 @@ ext {
     publishVersion = '0.0.1'
 
 }
+
+tasks.getByPath(":app-updater-core:javadocRelease").enabled = false
+tasks.getByPath(":app-updater-dialog:javadocRelease").enabled = false
