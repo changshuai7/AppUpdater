@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .setUrl(mUrl)
                 //配置要下载的MD5，如果校验不通过，则执行异常回调。不传入则默认不校验
                 .setFileMD5("1B64E40002948FF446D00517E59D9D49")
-                //配置下载地址，若不配置，则存在默认的位置
+                //配置下载地址，若不配置，则存储在默认的位置
                 .setPath(Environment.getExternalStorageDirectory() + File.separator + "MyApp")
                 //配置下载文件的命名，若不配置，则取URL上声明的名字
                 .setFilename("test.apk")
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 .setVersionCode(1)
                 //设置下载的请求头。有些特殊的下载地址需要配置请求头，请在这里添加
                 .addHeader("header-test", "header1")
-                //配置是否通知栏展示进度
+                //配置是否通知栏展示
                 .setShowNotification(true)
                 //设置是否下载完成以后自动安装
                 .setInstallApk(true);
