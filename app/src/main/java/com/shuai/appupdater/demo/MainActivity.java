@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.shuai.appupdater.dialog.UpdateBean;
+import com.shuai.appupdater.dialog.UpdateDialogBean;
 import com.shuai.appupdater.dialog.UpdateManager;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
@@ -162,35 +163,41 @@ public class MainActivity extends AppCompatActivity {
      */
     private void clickStartDialog() {
 
+
         /**设置升级功能配置*/
-        UpdateConfig config = new UpdateConfig();
-        config.setUrl(mUrl);
-        config.setFileMD5("1B64E40002948FF446D00517E59D9D49");
-        config.setVersionCode(1);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
-        config.addHeader("token", "xxxxxx");
-        config.setReDownload(false);
+        UpdateConfig config = new UpdateConfig()
+                .setUrl(mUrl)
+                .setFileMD5("1B64E40002948FF446D00517E59D9D49")
+                .setVersionCode(1)////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
+                .addHeader("token", "xxxxxx")
+                .setReDownload(false);
 
 
-        /**设置更新弹框的配置*/
-        UpdateBean bean = new UpdateBean();
-        bean.setUpdate(true);
-        bean.setForce(false);
-        bean.setNewAppVersion("1.0.0");
-        bean.setNewAppUpdateLog(
+        /**设置更新数据的配置*/
+        UpdateBean bean = new UpdateBean()
+                .setUpdate(true)
+                .setForce(false)
+                .setNewAppVersion("1.0.0")
+                .setNewAppUpdateLog(
                         "1、优化系统性能\n" +
-                        "2、bug都是petter写的\n" +
-                        "3、CS最帅\n" +
-                        "4、吊炸天的帅气\n" +
-                        "5、上官婉儿无敌帅\n" );
-//        bean.setNewAppUpdateDialogTitle("又要升级了，你准备好了吗？");
-        bean.setNewAppSize("20.5M");
+                                "2、bug都是petter写的\n" +
+                                "3、CS最帅\n" +
+                                "4、吊炸天的帅气\n" +
+                                "5、上官婉儿无敌帅\n")
+//        .setNewAppUpdateDialogTitle("又要升级了，你准备好了吗？")
+                .setNewAppSize("20.5M");
+
+        /**设置和弹框相关的*/
+        UpdateDialogBean dialogBean = new UpdateDialogBean();
+//                .setThemeColor(getResources().getColor(R.color.color_test));
+
+
         UpdateManager build = new UpdateManager
                 .Builder()
                 .setActivity(this)
                 .setUpdateConfig(config)
                 .setUpdateBean(bean)
-//                .setTopPic(R.mipmap.test_bg)
-//                .setThemeColor(getResources().getColor(R.color.colorAccent))
+                .setUpdateDialogBean(dialogBean)
                 .build();
         build.start();
     }

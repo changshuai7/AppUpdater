@@ -47,8 +47,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
     public static final String TIPS = "请授权访问存储空间权限，否则App无法更新";
     public static boolean isShow = false;   //弹框是否展示出来了
 
-    private UpdateBean mUpdateApp;
+    private UpdateBean mUpdateBean;
     private UpdateConfig mUpdateConfig;
+    private UpdateDialogBean mUpdateDialogBean;
 
     private NumberProgressBar mNumberProgressBar;
 
@@ -99,7 +100,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     //禁用
-                    if (mUpdateApp != null && mUpdateApp.isForce()) {
+                    if (mUpdateBean != null && mUpdateBean.isForce()) {
                         //返回桌面
                         startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
                         return true;
@@ -162,18 +163,19 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
     }
 
     private void initData() {
-        mUpdateApp = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
         mUpdateConfig =  getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
+        mUpdateBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
+        mUpdateDialogBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_BEAN);
 
         //设置主题色
         initTheme();
 
-        if (mUpdateApp != null) {
+        if (mUpdateBean != null) {
             //弹出对话框
-            final String dialogTitle = mUpdateApp.getNewAppUpdateDialogTitle();
-            final String newVersion = mUpdateApp.getNewAppVersion();
-            final String targetSize = mUpdateApp.getNewAppSize();
-            final String updateLog = mUpdateApp.getNewAppUpdateLog();
+            final String dialogTitle = mUpdateBean.getNewAppUpdateDialogTitle();
+            final String newVersion = mUpdateBean.getNewAppVersion();
+            final String targetSize = mUpdateBean.getNewAppSize();
+            final String updateLog = mUpdateBean.getNewAppUpdateLog();
 
             //更新内容
             mContentTextView.setText(TextUtils.isEmpty(updateLog) ? "暂无" : updateLog);
@@ -186,7 +188,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             //标题
             mTitleTextView.setText(TextUtils.isEmpty(dialogTitle) ? String.format("发现新版本：%s", newVersion) : dialogTitle);
             //强制更新
-            if (mUpdateApp.isForce()) {
+            if (mUpdateBean.isForce()) {
                 mLlClose.setVisibility(View.GONE);
             }
         }
@@ -197,8 +199,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
      */
     private void initTheme() {
 
-        final int color = getArguments().getInt(UpdateManager.KEY_THEME, -1);
-        final int topResId = getArguments().getInt(UpdateManager.KEY_TOP_IMAGE, -1);
+        final int color = mUpdateDialogBean.getThemeColor()!=0?mUpdateDialogBean.getThemeColor():-1;
+        final int topResId = mUpdateDialogBean.getTopPic()!=0?mUpdateDialogBean.getTopPic():-1 ;
 
         if (-1 == topResId) {
             if (-1 == color) {
@@ -307,7 +309,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                     public void onFinish(File file) {
                         final File apkFile = file;
                         if (!UpdateDialogFragment.this.isRemoving()) {
-                            if (mUpdateApp.isForce()) {
+                            if (mUpdateBean.isForce()) {
                                 mNumberProgressBar.setVisibility(View.GONE);
                                 mUpdateOkButton.setText("安装");
                                 mUpdateOkButton.setVisibility(View.VISIBLE);

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 
 /**
- * 版本信息
+ * 和版本升级信息相关配置
  */
 public class UpdateBean implements Parcelable {
 
@@ -20,52 +20,62 @@ public class UpdateBean implements Parcelable {
     public UpdateBean() {
     }
 
+    public UpdateBean build(){
+        return this;
+    }
+
     public boolean isUpdate() {
         return isUpdate;
     }
 
-    public void setUpdate(boolean update) {
+    public UpdateBean setUpdate(boolean update) {
         isUpdate = update;
+        return this;
     }
 
     public boolean isForce() {
         return isForce;
     }
 
-    public void setForce(boolean force) {
+    public UpdateBean setForce(boolean force) {
         isForce = force;
+        return this;
     }
 
     public String getNewAppVersion() {
         return newAppVersion;
     }
 
-    public void setNewAppVersion(String newAppVersion) {
+    public UpdateBean setNewAppVersion(String newAppVersion) {
         this.newAppVersion = newAppVersion;
+        return this;
     }
 
     public String getNewAppUpdateLog() {
         return newAppUpdateLog;
     }
 
-    public void setNewAppUpdateLog(String newAppUpdateLog) {
+    public UpdateBean setNewAppUpdateLog(String newAppUpdateLog) {
         this.newAppUpdateLog = newAppUpdateLog;
+        return this;
     }
 
     public String getNewAppUpdateDialogTitle() {
         return newAppUpdateDialogTitle;
     }
 
-    public void setNewAppUpdateDialogTitle(String newAppUpdateDialogTitle) {
+    public UpdateBean setNewAppUpdateDialogTitle(String newAppUpdateDialogTitle) {
         this.newAppUpdateDialogTitle = newAppUpdateDialogTitle;
+        return this;
     }
 
     public String getNewAppSize() {
         return newAppSize;
     }
 
-    public void setNewAppSize(String newAppSize) {
+    public UpdateBean setNewAppSize(String newAppSize) {
         this.newAppSize = newAppSize;
+        return this;
     }
 
 

@@ -36,72 +36,85 @@ public class UpdateConfig implements Parcelable {
 
     }
 
+    public UpdateConfig build(){
+        return this;
+    }
+
     public String getFileMD5() {
         return mFileMD5;
     }
 
-    public void setFileMD5(String mFileMD5) {
+    public UpdateConfig setFileMD5(String mFileMD5) {
         this.mFileMD5 = mFileMD5;
+        return this;
     }
 
     public String getUrl() {
         return mUrl;
     }
 
-    public void setUrl(String url) {
+    public UpdateConfig setUrl(String url) {
         this.mUrl = url;
+        return this;
     }
 
     public String getPath() {
         return mPath;
     }
 
-    public void setPath(String path) {
+    public UpdateConfig setPath(String path) {
         this.mPath = path;
+        return this;
     }
 
     public String getFilename() {
         return mFilename;
     }
 
-    public void setFilename(String filename) {
+    public UpdateConfig setFilename(String filename) {
         this.mFilename = filename;
+        return this;
     }
 
     public boolean isShowNotification() {
         return isShowNotification;
     }
 
-    public void setShowNotification(boolean isShowNotification) {
+    public UpdateConfig setShowNotification(boolean isShowNotification) {
         this.isShowNotification = isShowNotification;
+        return this;
     }
 
     public String getChannelId() {
         return mChannelId;
     }
 
-    public void setChannelId(String channelId) {
+    public UpdateConfig setChannelId(String channelId) {
         this.mChannelId = channelId;
+        return this;
     }
 
     public String getChannelName() {
         return mChannelName;
     }
 
-    public void setChannelName(String channelName) {
+    public UpdateConfig setChannelName(String channelName) {
         this.mChannelName = channelName;
+        return this;
     }
 
-    public void setNotificationId(int notificationId){
+    public UpdateConfig setNotificationId(int notificationId){
         this.mNotificationId = notificationId;
+        return this;
     }
 
     public int getNotificationId(){
         return this.mNotificationId;
     }
 
-    public void setNotificationIcon(@DrawableRes int icon){
+    public UpdateConfig setNotificationIcon(@DrawableRes int icon){
         this.mNotificationIcon = icon;
+        return this;
     }
 
     public int getNotificationIcon(){
@@ -112,70 +125,79 @@ public class UpdateConfig implements Parcelable {
         return isInstallApk;
     }
 
-    public void setInstallApk(boolean isInstallApk) {
+    public UpdateConfig setInstallApk(boolean isInstallApk) {
         this.isInstallApk = isInstallApk;
+        return this;
     }
 
     public String getAuthority() {
         return mAuthority;
     }
 
-    public void setAuthority(String authority) {
+    public UpdateConfig setAuthority(String authority) {
         this.mAuthority = authority;
+        return this;
     }
 
     public boolean isShowPercentage() {
         return isShowPercentage;
     }
 
-    public void setShowPercentage(boolean showPercentage) {
+    public UpdateConfig setShowPercentage(boolean showPercentage) {
         isShowPercentage = showPercentage;
+        return this;
     }
 
     public boolean isReDownload() {
         return isReDownload;
     }
 
-    public void setReDownload(boolean reDownload) {
+    public UpdateConfig setReDownload(boolean reDownload) {
         isReDownload = reDownload;
+        return this;
     }
 
     public boolean isVibrate() {
         return isVibrate;
     }
 
-    public void setVibrate(boolean vibrate) {
+    public UpdateConfig setVibrate(boolean vibrate) {
         isVibrate = vibrate;
+        return this;
     }
 
     public boolean isSound() {
         return isSound;
     }
 
-    public void setSound(boolean sound) {
+    public UpdateConfig setSound(boolean sound) {
         isSound = sound;
+        return this;
     }
 
     public Integer getVersionCode(){
         return mVersionCode;
     }
 
-    public void setVersionCode(Integer versionCode){
+    public UpdateConfig setVersionCode(Integer versionCode){
         this.mVersionCode = versionCode;
+        return this;
     }
 
     public Map<String, String> getRequestProperty() {
         return mRequestProperty;
     }
 
-    public void addHeader(String key, String value){
+    public UpdateConfig addHeader(String key, String value){
         initRequestProperty();
         mRequestProperty.put(key,value);
+        return this;
     }
 
-    public void addHeader(Map<String,String> headers){
+    public UpdateConfig addHeader(Map<String,String> headers){
         initRequestProperty();
         mRequestProperty.putAll(headers);
+        return this;
     }
 
     private void initRequestProperty(){
@@ -188,8 +210,9 @@ public class UpdateConfig implements Parcelable {
         return isDeleteCancelFile;
     }
 
-    public void setDeleteCancelFile(boolean deleteCancelFile) {
+    public UpdateConfig setDeleteCancelFile(boolean deleteCancelFile) {
         isDeleteCancelFile = deleteCancelFile;
+        return this;
     }
 
     @Override
