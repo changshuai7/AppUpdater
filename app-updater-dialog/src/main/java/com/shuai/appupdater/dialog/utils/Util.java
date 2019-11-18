@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog.utils;
+package com.shuai.appupdater.dialog.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog.utils;
+package com.shuai.appupdater.dialog.utils;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;

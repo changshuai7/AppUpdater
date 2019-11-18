@@ -22,21 +22,14 @@ import java.util.Map;
 
 public class AppUpdater {
     /**
-     * {@link #mContext}不强制要求是{@link Activity}，但能传{@link Activity}尽量传。AppUpdater本应该只专注于App更新，尽量不涉及动态权限相关的处理。如果mContext传的是{@link Activity}，则默认会校验一次动态权限。
+     * {@link #mContext}不强制要求是{@link Activity}，但能传{@link Activity}尽量传。
+     * AppUpdater本应该只专注于App更新，尽量不涉及动态权限相关的处理。如果mContext传的是{@link Activity}，则默认会校验一次动态权限。
      */
-    private Context mContext;
-    /**
-     * 配置信息
-     */
-    private UpdateConfig mConfig;
-    /**
-     * 更新回调
-     */
-    private UpdateCallback mCallback;
-    /**
-     * http管理接口，可自定义实现。如：使用okHttp
-     */
-    private IHttpManager mHttpManager;
+    private Context mContext;           //上下文
+
+    private UpdateConfig mConfig;       //配置信息
+    private UpdateCallback mCallback;   //更新回调
+    private IHttpManager mHttpManager;  //Http管理接口
 
     private ServiceConnection mServiceConnection;
 
@@ -235,7 +228,6 @@ public class AppUpdater {
             return this;
         }
 
-
         /**
          * 设置下载完成后知否自动触发安装APK
          * @param isInstallApk 下载完成后是否自动调用安装APK（默认true）
@@ -305,16 +297,6 @@ public class AppUpdater {
          */
         public Builder addHeader(Map<String,String> headers){
             mConfig.addHeader(headers);
-            return this;
-        }
-
-        /**
-         *  设置是否自动删除取消下载的文件
-         * @param isDeleteCancelFile 是否删除取消下载的文件（默认为true）
-         * @return
-         */
-        public Builder setDeleteCancelFile(boolean isDeleteCancelFile){
-            mConfig.setDeleteCancelFile(isDeleteCancelFile);
             return this;
         }
 

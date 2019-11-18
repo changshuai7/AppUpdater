@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog.utils;
+package com.shuai.appupdater.dialog.utils;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,7 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.widget.TextView;
 
-import static com.shuai.app.appupdater.dialog.utils.ColorUtil.getRandomColor;
+import static com.shuai.appupdater.dialog.utils.ColorUtil.getRandomColor;
 
 
 public class DrawableUtil {

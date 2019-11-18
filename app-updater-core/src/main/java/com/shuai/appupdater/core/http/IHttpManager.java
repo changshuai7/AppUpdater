@@ -12,12 +12,12 @@ public interface IHttpManager {
 
     /**
      * 下载
-     * @param url
-     * @param path
-     * @param filename
-     * @param fileMd5
-     * @param requestProperty
-     * @param callback
+     * @param url               下载地址
+     * @param path              下载路径
+     * @param filename          文件名
+     * @param fileMd5           要下载文件的MD5
+     * @param requestProperty   请求头参数
+     * @param callback          请求结果回调
      */
     void download(String url, String path, String filename,String fileMd5, @Nullable Map<String,String> requestProperty, DownloadCallback callback);
 
@@ -28,7 +28,7 @@ public interface IHttpManager {
 
     interface DownloadCallback extends Serializable{
         /**
-         * 开始
+         * 开始下载
          * @param url
          */
         void onStart(String url);
@@ -41,20 +41,20 @@ public interface IHttpManager {
         void onProgress(int progress,int total);
 
         /**
-         * 完成
+         * 下载完成
          * @param file
          */
         void onFinish(File file);
 
         /**
-         * 错误
+         * 下载错误
          * @param e
          */
         void onError(Exception e);
 
 
         /**
-         * 取消
+         * 下载取消
          */
         void onCancel();
     }

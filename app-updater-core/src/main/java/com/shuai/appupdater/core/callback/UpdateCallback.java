@@ -31,7 +31,7 @@ public interface UpdateCallback {
     void onFinish(File file);
 
     /**
-     * 错误
+     * 错误（包括MD5校验失败，也会在此回调）
      * @param e
      */
     void onError(Exception e);

@@ -20,38 +20,27 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.shuai.app.updater.R;
+import com.shuai.appupdater.core.R;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;
 import com.shuai.appupdater.core.constant.Constants;
 import com.shuai.appupdater.core.http.HttpManager;
 import com.shuai.appupdater.core.http.IHttpManager;
 import com.shuai.appupdater.core.util.AppUtils;
+import com.shuai.appupdater.core.util.Md5Util;
 
 import java.io.File;
 
 public class DownloadService extends Service {
 
     private DownloadBinder mDownloadBinder = new DownloadBinder();
-    /**
-     * 是否在下载，防止重复下载。
-     */
-    private boolean isDownloading;
-    /**
-     * 最后更新进度，用来降频刷新
-     */
-    private int mLastProgress = -1;
-    /**
-     * 最后进度更新时间，用来降频刷新
-     */
-    private long mLastTime;
-    /**
-     * 失败后重新下载次数
-     */
-    private int mCount = 0;
+
+    private boolean isDownloading;      //是否在下载，防止重复下载。
+    private int mLastProgress = -1;     //最后更新进度，用来降频刷新
+    private long mLastTime;             //最后进度更新时间，用来降频刷新
+    private int mCount = 0;             //失败后重新下载次数
 
     private IHttpManager mHttpManager;
-
     private File mFile;
 
     private Context getContext(){
@@ -62,7 +51,6 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if(intent != null){
-
             boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,false);
             if(isStop){
                 stopDownload();
@@ -74,9 +62,10 @@ public class DownloadService extends Service {
                 }
                 //获取配置信息
                 UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
+                //TODO :BUG:通过通知栏重试启动服务的，没法传递HttpManager和Callback。导致:外部传入HttpManager或者有进度回调的，无法生效。
                 startDownload(config,null,null);
             }else{
-                Log.w(Constants.TAG,"Please do not repeat the download.");
+                Log.d(Constants.TAG,"onStartCommand:请勿重复执行下载..");
             }
         }
 
@@ -91,7 +80,7 @@ public class DownloadService extends Service {
      * 开始下载
      * @param config
      * @param httpManager
-     * @param callback
+     * @param callback  给到前台App的callback
      */
     public void startDownload(UpdateConfig config,IHttpManager httpManager,UpdateCallback callback){
 
@@ -104,7 +93,7 @@ public class DownloadService extends Service {
         }
 
         if(isDownloading){
-            Log.w(Constants.TAG,"Please do not repeat the download.");
+            Log.d(Constants.TAG,"startDownload:请勿重复执行下载..");
             return;
         }
 
@@ -128,33 +117,61 @@ public class DownloadService extends Service {
         }
 
         mFile = new File(path,filename);
+
         if(mFile.exists()){//文件是否存在
             Integer versionCode = config.getVersionCode();
+            // 如果传入了versionCode，需要取缓存。
             if(versionCode!=null){
                 try{
+                    // 本地已经存在要下载的APK
                     if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,mFile)){
-                        //本地已经存在要下载的APK
                         Log.d(Constants.TAG,"CacheFile:" + mFile);
-                        if(config.isInstallApk()){
-                            String authority = config.getAuthority();
-                            if(TextUtils.isEmpty(authority)){//如果为空则默认
-                                authority = getContext().getPackageName() + ".fileProvider";
+
+                        //如果需要校验MD5
+                        if (!TextUtils.isEmpty(config.getFileMD5())){
+                            //MD5校验不通过，结果会异常终止
+                            if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
+                                Log.e(Constants.TAG,"缓存的APK的MD5校验不通过");
+                                //对于已下载的，需要检验MD5，但是MD5校验不通过的，需要删除文件.否则不删除会导致一直读取本地文件，一直MD5校验不通过而无法继续。
+                                boolean delete = mFile.delete();//delete：是否删除成功
+
+                                if (callback!=null){
+                                    callback.onError(new Exception("缓存的APK的MD5校验不通过"));
+                                }
+                                stopService();
+                                return;//----->因MD5异常而终止onError
                             }
+                        }
+
+                        //不需要检验MD5或者校验通过
+
+                        //如果需要弹出安装apk
+                        if (config.isInstallApk()){
+                            String authority = (!TextUtils.isEmpty(config.getAuthority()))?config.getAuthority():getContext().getPackageName() + ".fileProvider";
                             AppUtils.INSTANCE.installApk(getContext(),mFile,authority);
                         }
+
                         if(callback!=null){
                             callback.onFinish(mFile);
                         }
                         stopService();
-                        return;
+                        return;//----->因有缓存APK而终止onFinish
                     }
                 }catch (Exception e){
-                    Log.w(Constants.TAG,e);
+
+                    e.printStackTrace();
+                    if (callback!=null){
+                        callback.onError(e);
+                    }
+                    stopService();
+                    return;//----->因其他异常而终止onError
                 }
             }
-            //删除旧文件
-            mFile.delete();
+            //mFile无用，删除旧文件。
+            boolean delete = mFile.delete();
         }
+
+        //执行下载、安装等后续操作
         Log.d(Constants.TAG,"File:" + mFile);
 
         if(httpManager != null){
@@ -162,6 +179,8 @@ public class DownloadService extends Service {
         }else{
             mHttpManager = HttpManager.getInstance();
         }
+
+        // 去网络请求执行下载
         mHttpManager.download(url,path,filename,fileMd5,config.getRequestProperty(),new AppDownloadCallback(config,callback));
 
     }
@@ -199,6 +218,9 @@ public class DownloadService extends Service {
 
     //---------------------------------------- DownloadCallback
 
+    /**
+     * HttpManager下载回调
+     */
     public class AppDownloadCallback implements IHttpManager.DownloadCallback{
 
         public UpdateConfig config;
@@ -301,7 +323,24 @@ public class DownloadService extends Service {
         public void onFinish(File file) {
             Log.d(Constants.TAG,"onFinish:" + file);
             isDownloading = false;
+
+            Log.d("被下载文件的MD5 --> ", Md5Util.getFileMD5(file));
+
+            //如果需要校验MD5
+            if (!TextUtils.isEmpty(config.getFileMD5())){
+                //MD5校验不通过
+                if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
+                    Log.e(Constants.TAG,"下载的APK的MD5校验不通过");
+
+                    //对于已下载的，需要检验MD5，但是MD5校验不通过的，需要删除文件.否则不删除会导致一直读取本地文件，一直MD5校验不通过而无法继续。
+                    boolean delete = mFile.delete();//delete：是否删除成功
+                    this.onError(new Exception("下载的APK的MD5校验不通过"));
+                    return;
+                }
+            }
+
             showFinishNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
+
             if(isInstallApk){
                 AppUtils.INSTANCE.installApk(getContext(),file,authority);
             }
@@ -428,9 +467,22 @@ public class DownloadService extends Service {
         notifyNotification(notifyId,notification);
     }
 
+    /**
+     * 显示下载出现错误时的通知。可以点击重试。
+     * @param notifyId
+     * @param channelId
+     * @param icon
+     * @param title
+     * @param content
+     * @param isReDownload
+     * @param config
+     */
     private void showErrorNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isReDownload,UpdateConfig config){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
         builder.setAutoCancel(true);
+
+        //TODO:此处有bug：下载失败以后，重新下载，无法回调下载进度。除了用EventBus等方式传递消息以外，暂无好的解决办法......同时也无法使用外部传入的HttpManager
+
         if(isReDownload){//重新下载
             Intent intent  = new Intent(getContext(),DownloadService.class);
             intent.putExtra(Constants.KEY_RE_DOWNLOAD,true);

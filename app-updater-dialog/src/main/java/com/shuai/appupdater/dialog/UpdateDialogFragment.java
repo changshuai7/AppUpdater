@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog;
+package com.shuai.appupdater.dialog;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,7 +15,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,11 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shuai.app.appupdater.dialog.utils.Util;
-import com.shuai.app.dialog.R;
-import com.shuai.app.appupdater.dialog.utils.ColorUtil;
-import com.shuai.app.appupdater.dialog.utils.DrawableUtil;
-import com.shuai.app.appupdater.dialog.widget.NumberProgressBar;
+import com.shuai.appupdater.dialog.utils.Util;
+import com.shuai.appupdater.dialog.R;
+import com.shuai.appupdater.dialog.utils.ColorUtil;
+import com.shuai.appupdater.dialog.utils.DrawableUtil;
+import com.shuai.appupdater.dialog.widget.NumberProgressBar;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;
@@ -45,11 +44,12 @@ import java.io.File;
  * 版本升级弹框
  */
 public class UpdateDialogFragment extends DialogFragment implements View.OnClickListener {
-    public static final String TIPS = "请授权访问存储空间权限，否则App无法更新";
     public static boolean isShow = false;   //弹框是否展示出来了
 
-    private UpdateBean mUpdateApp;
+    private UpdateBean mUpdateBean;
     private UpdateConfig mUpdateConfig;
+    private UpdateDialogBean mUpdateDialogBean;
+    private UpdateDialogListener mUpdateDialogListener;
 
     private NumberProgressBar mNumberProgressBar;
 
@@ -100,7 +100,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     //禁用
-                    if (mUpdateApp != null && mUpdateApp.isForce()) {
+                    if (mUpdateBean != null && mUpdateBean.isForce()) {
                         //返回桌面
                         startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
                         return true;
@@ -163,18 +163,20 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
     }
 
     private void initData() {
-        mUpdateApp = (UpdateBean) getArguments().getSerializable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
-        mUpdateConfig = (UpdateConfig) getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
+        mUpdateConfig =  getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
+        mUpdateBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
+        mUpdateDialogBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_BEAN);
+        mUpdateDialogListener = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_LISTENER);
 
         //设置主题色
         initTheme();
 
-        if (mUpdateApp != null) {
+        if (mUpdateBean != null) {
             //弹出对话框
-            final String dialogTitle = mUpdateApp.getNewAppUpdateDialogTitle();
-            final String newVersion = mUpdateApp.getNewAppVersion();
-            final String targetSize = mUpdateApp.getNewAppSize();
-            final String updateLog = mUpdateApp.getNewAppUpdateLog();
+            final String dialogTitle = mUpdateBean.getNewAppUpdateDialogTitle();
+            final String newVersion = mUpdateBean.getNewAppVersion();
+            final String targetSize = mUpdateBean.getNewAppSize();
+            final String updateLog = mUpdateBean.getNewAppUpdateLog();
 
             //更新内容
             mContentTextView.setText(TextUtils.isEmpty(updateLog) ? "暂无" : updateLog);
@@ -187,7 +189,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             //标题
             mTitleTextView.setText(TextUtils.isEmpty(dialogTitle) ? String.format("发现新版本：%s", newVersion) : dialogTitle);
             //强制更新
-            if (mUpdateApp.isForce()) {
+            if (mUpdateBean.isForce()) {
                 mLlClose.setVisibility(View.GONE);
             }
         }
@@ -198,8 +200,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
      */
     private void initTheme() {
 
-        final int color = getArguments().getInt(UpdateManager.KEY_THEME, -1);
-        final int topResId = getArguments().getInt(UpdateManager.KEY_TOP_IMAGE, -1);
+        final int color = mUpdateDialogBean.getThemeColor()!=0?mUpdateDialogBean.getThemeColor():-1;
+        final int topResId = mUpdateDialogBean.getTopPic()!=0?mUpdateDialogBean.getTopPic():-1 ;
 
         if (-1 == topResId) {
             if (-1 == color) {
@@ -211,7 +213,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
         } else {
             if (-1 == color) {
-////                自动提色.如果采用自动提色，则需要引入v7相关的包compile 'com.android.support:palette-v7:26.1.0'
+////                自动提色.如果采用自动提色，则需要引入v7相关的包：compile 'com.android.support:palette-v7:26.1.0'
 //                Palette.from(Util.drawableToBitmap(this.getResources().getDrawable(topResId))).generate(new Palette.PaletteAsyncListener() {
 //                    @Override
 //                    public void onGenerated(Palette palette) {
@@ -252,9 +254,11 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             //权限判断是否有访问外部存储空间权限
             int flag = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (flag != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // 用户拒绝过这个权限了，应该提示用户，为什么需要这个权限。
-                    Toast.makeText(getActivity(), TIPS, Toast.LENGTH_LONG).show();
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {//如果禁止权限不在询问
+                    // 在小米手机上有点恶心，shouldShowRequestPermissionRationale一律返回了true.TMD
+                    // 用户拒绝过这个权限了，勾选了禁止权限不再询问，应该提示用户，为什么需要这个权限。
+                    mUpdateDialogListener.onPermissionDenied();
+                    dismiss();
                 } else {
                     // 申请授权。
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -263,9 +267,11 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             } else {
                 updateApp();
             }
+            mUpdateDialogListener.onClickDialogConfirm(view);
 
         } else if (i == R.id.iv_close) {
             dismiss();
+            mUpdateDialogListener.onClickDialogCancel(view);
         }
     }
 
@@ -280,9 +286,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
                     @Override
                     public void onDownloading(boolean isDownloading) {
-                        if (isDownloading) {
-                            Toast.makeText(mActivity, "已经在下载中,请勿重复下载。", Toast.LENGTH_SHORT).show();
-                        }
+
+                        mUpdateDialogListener.onUpdateIsDownloading(isDownloading);
                     }
 
                     @Override
@@ -290,11 +295,12 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                         mNumberProgressBar.setProgress(0);
                         mNumberProgressBar.setVisibility(View.VISIBLE);
                         mUpdateOkButton.setVisibility(View.GONE);
+
+                        mUpdateDialogListener.onUpdateStart(url);
                     }
 
                     @Override
                     public void onProgress(int progress, int total, boolean isChange) {
-                        Log.d("progress-------->",progress+"");
                         if (isChange) {
                             if (!UpdateDialogFragment.this.isRemoving()) {
                                 mNumberProgressBar.setVisibility(View.VISIBLE);
@@ -303,20 +309,27 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 mUpdateOkButton.setVisibility(View.GONE);
                             }
                         }
+                        mUpdateDialogListener.onUpdateProgress(progress,total,isChange);
                     }
 
                     @Override
                     public void onFinish(File file) {
                         final File apkFile = file;
                         if (!UpdateDialogFragment.this.isRemoving()) {
-                            if (mUpdateApp.isForce()) {
+                            if (mUpdateBean.isForce()) {
                                 mNumberProgressBar.setVisibility(View.GONE);
                                 mUpdateOkButton.setText("安装");
                                 mUpdateOkButton.setVisibility(View.VISIBLE);
                                 mUpdateOkButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        //安装
+                                        //执行安装
+
+                                        //这里不选择调用updateApp()的原因是：
+                                        //1、如果下载完、跳转到安装页面，用户不安装而是直接返回，这时候如果配置的是没有选择使用缓存，调用updateApp()会重新下载。所以不可以用调用updateApp()方法
+                                        //2、如果用户选择了下载完不跳转安装界面。那么。用户点击此安装按钮，调用updateApp()会重新下载。所以不可以用调用updateApp()方法
+
+                                        //既然走到了onFinish，那么MD5一定是校验通过了。所以这里不需要再次校验MD5。直接安装即可。
                                         installApp(apkFile);
                                     }
                                 });
@@ -324,12 +337,12 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 dismissAllowingStateLoss();
                             }
                         }
+                        mUpdateDialogListener.onUpdateFinish(file);
                     }
 
                     @Override
                     public void onError(Exception e) {
                         //提示错误信息
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_SHORT).show();
                         if (!UpdateDialogFragment.this.isRemoving()){
                             mNumberProgressBar.setVisibility(View.GONE);
                             mUpdateOkButton.setText("下载失败，点击重试");
@@ -342,11 +355,13 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 }
                             });
                         }
+                        mUpdateDialogListener.onUpdateError(e);
                     }
 
                     @Override
                     public void onCancel() {
                         mNumberProgressBar.setVisibility(View.INVISIBLE);
+                        mUpdateDialogListener.onUpdateCancel();
                     }
                 });
         mAppUpdater.start();
@@ -354,9 +369,11 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
     /**
      * 安装app
+     * 不校验MD5
      * @param file
      */
     private void installApp(File file){
+
         String authority = mUpdateConfig.getAuthority();
         if(TextUtils.isEmpty(authority)){//如果为空则默认
             authority = getContext().getPackageName() + ".fileProvider";
@@ -373,7 +390,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                 updateApp();
             } else {
                 //提示，并且关闭
-                Toast.makeText(getActivity(), TIPS, Toast.LENGTH_LONG).show();
+                mUpdateDialogListener.onPermissionDenied();
                 dismiss();
 
             }

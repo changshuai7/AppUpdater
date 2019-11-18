@@ -5,6 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+        applicationId "com.shuai.appupdater.demo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -44,9 +45,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //support
-    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
-    api project(':app-updater-core')
-    api project(':app-updater-dialog')
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation project(':app-updater-core')
+    implementation project(':app-updater-dialog')
 }

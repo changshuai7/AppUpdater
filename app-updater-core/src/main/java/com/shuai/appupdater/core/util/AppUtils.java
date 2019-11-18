@@ -113,6 +113,21 @@ public enum AppUtils {
     }
 
     /**
+     * 检查apk的md5是否正确
+     * @param fileMd5
+     * @param desFile
+     * @return  true:正确、false：错误
+     */
+    public boolean checkApkMd5(String fileMd5,File desFile){
+        if (!TextUtils.isEmpty(fileMd5) && desFile != null && desFile.exists() && desFile.isFile()){//fileMd5不为空，则校验md5
+            if (fileMd5.equals(Md5Util.getFileMD5(desFile))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * APK是否存在
      * @param context
      * @param versionCode
