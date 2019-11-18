@@ -150,7 +150,7 @@ public class UpdateManager {
             }
 
             if (mUpdateDialogListener !=null){
-                bundle.putSerializable(INTENT_KEY_UPDATE_DIALOG_LISTENER,mUpdateDialogListener);
+                bundle.putParcelable(INTENT_KEY_UPDATE_DIALOG_LISTENER,mUpdateDialogListener);
             }
 
             if (mUpdateBean!=null && mUpdateBean.isUpdate()){

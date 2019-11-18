@@ -166,7 +166,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
         mUpdateConfig =  getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
         mUpdateBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
         mUpdateDialogBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_BEAN);
-        mUpdateDialogListener = (UpdateDialogListener) getArguments().getSerializable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_LISTENER);
+        mUpdateDialogListener = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_LISTENER);
 
         //设置主题色
         initTheme();
