@@ -50,6 +50,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
     private UpdateBean mUpdateBean;
     private UpdateConfig mUpdateConfig;
     private UpdateDialogBean mUpdateDialogBean;
+    private UpdateDialogListener mUpdateDialogListener;
 
     private NumberProgressBar mNumberProgressBar;
 
@@ -166,6 +167,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
         mUpdateConfig =  getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_CONFIG);
         mUpdateBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_BEAN);
         mUpdateDialogBean = getArguments().getParcelable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_BEAN);
+        mUpdateDialogListener = (UpdateDialogListener) getArguments().getSerializable(UpdateManager.INTENT_KEY_UPDATE_DIALOG_LISTENER);
 
         //设置主题色
         initTheme();
@@ -264,9 +266,11 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             } else {
                 updateApp();
             }
+            mUpdateDialogListener.onClickDialogConfirm(view);
 
         } else if (i == R.id.iv_close) {
             dismiss();
+            mUpdateDialogListener.onClickDialogCancel(view);
         }
     }
 
@@ -281,9 +285,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
                     @Override
                     public void onDownloading(boolean isDownloading) {
-                        if (isDownloading) {
-                            Toast.makeText(mActivity, "已经在下载中,请勿重复下载。", Toast.LENGTH_SHORT).show();
-                        }
+
+                        mUpdateDialogListener.onUpdateIsDownloading(isDownloading);
                     }
 
                     @Override
@@ -291,6 +294,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                         mNumberProgressBar.setProgress(0);
                         mNumberProgressBar.setVisibility(View.VISIBLE);
                         mUpdateOkButton.setVisibility(View.GONE);
+
+                        mUpdateDialogListener.onUpdateStart(url);
                     }
 
                     @Override
@@ -303,6 +308,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 mUpdateOkButton.setVisibility(View.GONE);
                             }
                         }
+                        mUpdateDialogListener.onUpdateProgress(progress,total,isChange);
                     }
 
                     @Override
@@ -330,12 +336,12 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 dismissAllowingStateLoss();
                             }
                         }
+                        mUpdateDialogListener.onUpdateFinish(file);
                     }
 
                     @Override
                     public void onError(Exception e) {
                         //提示错误信息
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_SHORT).show();
                         if (!UpdateDialogFragment.this.isRemoving()){
                             mNumberProgressBar.setVisibility(View.GONE);
                             mUpdateOkButton.setText("下载失败，点击重试");
@@ -348,11 +354,13 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 }
                             });
                         }
+                        mUpdateDialogListener.onUpdateError(e);
                     }
 
                     @Override
                     public void onCancel() {
                         mNumberProgressBar.setVisibility(View.INVISIBLE);
+                        mUpdateDialogListener.onUpdateCancel();
                     }
                 });
         mAppUpdater.start();

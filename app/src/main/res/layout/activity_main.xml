@@ -7,22 +7,52 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <TextView
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="--------------app-updater-core----------------"
+        android:text="--------------app-updater-dialog----------------"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="简易功能，可以解决绝大多数需求"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn1"
+        android:id="@+id/btn_update_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:text="启动默认弹框升级"
+        style="@style/OnClick"/>
+
+
+    <TextView
+        android:layout_marginTop="60dp"
+        android:text="--------------app-updater-core----------------"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginBottom="10dp"
+        android:text="高扩展功能，对于自定义UI需求的请关注"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_core_easy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:text="后台升级"
+        android:text="最简单后台升级"
 
         style="@style/OnClick"/>
 
@@ -33,7 +63,7 @@
         android:layout_margin="20dp"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
     <Button
-        android:id="@+id/btn2"
+        android:id="@+id/btn_core_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -42,7 +72,7 @@
         android:text="监听进度后台升级"
         style="@style/OnClick"/>
     <Button
-        android:id="@+id/btn3"
+        android:id="@+id/btn_core_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -52,32 +82,15 @@
         style="@style/OnClick"/>
 
     <Button
-        android:id="@+id/btnCancel"
+        android:id="@+id/btn_core_cancel"
         style="@style/OnClick"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="取消下载" />
+        android:text="取消下载升级" />
 
 
-    <TextView
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="20dp"
-        android:text="--------------app-updater-dialog----------------"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnStartDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:text="启动默认弹框升级"
-        style="@style/OnClick"/>
 
 </LinearLayout>

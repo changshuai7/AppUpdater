@@ -14,7 +14,7 @@ public class UpdateBean implements Parcelable {
 
     private String newAppVersion;           //新版本号："1.2.3"
     private String newAppUpdateLog;         //更新日志："1、优化性能\n 2、修复bug"
-    private String newAppUpdateDialogTitle; //配置dialog的title
+    private String newAppUpdateDialogTitle; //配置dialog的title。需要注意的是，如果这里传入了title，那么会覆盖形如："发现新版本1.0.0"的标题。
     private String newAppSize;              //新app大小："100M"
 
     public UpdateBean() {

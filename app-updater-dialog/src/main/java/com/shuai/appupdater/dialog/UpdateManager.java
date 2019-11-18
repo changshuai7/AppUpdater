@@ -13,8 +13,9 @@ import android.widget.Toast;
 import com.shuai.appupdater.core.UpdateConfig;
 
 /**
- * Created by changshuai on 2019/11/17.
+ * 升级管理器
  *
+ * @author changshuai
  */
 
 public class UpdateManager {
@@ -22,6 +23,7 @@ public class UpdateManager {
     final static String INTENT_KEY_UPDATE_CONFIG = "intent_key_update_config";
     final static String INTENT_KEY_UPDATE_BEAN = "intent_key_update_bean";
     final static String INTENT_KEY_UPDATE_DIALOG_BEAN = "intent_key_update_dialog_bean";
+    final static String INTENT_KEY_UPDATE_DIALOG_LISTENER = "intent_key_update_dialog_listener";
 
     private static final String TAG = UpdateManager.class.getSimpleName();
 
@@ -30,12 +32,14 @@ public class UpdateManager {
     private UpdateBean mUpdateBean;
     private UpdateConfig mUpdateConfig;
     private UpdateDialogBean mUpdateDialogBean;
+    private UpdateDialogListener mUpdateDialogListener;
 
     private UpdateManager(Builder builder) {
         mActivity = builder.getActivity();
         mUpdateConfig = builder.getUpdateConfig();
         mUpdateDialogBean = builder.getUpdateDialogBean();
         mUpdateBean = builder.getUpdateAppBean();
+        mUpdateDialogListener = builder.getUpdateDialogListener();
 
     }
 
@@ -45,6 +49,7 @@ public class UpdateManager {
         private UpdateConfig mUpdateConfig;
         private UpdateBean mUpdateBean;
         private UpdateDialogBean mUpdateDialogBean;
+        private UpdateDialogListener mUpdateDialogListener;
 
         public Activity getActivity() {
             return mActivity;
@@ -76,6 +81,14 @@ public class UpdateManager {
         }
         public Builder setUpdateBean(UpdateBean updateBean){
             this.mUpdateBean = updateBean;
+            return this;
+        }
+
+        public UpdateDialogListener getUpdateDialogListener() {
+            return mUpdateDialogListener;
+        }
+        public Builder setUpdateDialogListener(UpdateDialogListener mUpdateDialogListener) {
+            this.mUpdateDialogListener = mUpdateDialogListener;
             return this;
         }
 
@@ -134,6 +147,10 @@ public class UpdateManager {
 
             if (mUpdateConfig !=null){
                 bundle.putParcelable(INTENT_KEY_UPDATE_CONFIG, mUpdateConfig);
+            }
+
+            if (mUpdateDialogListener !=null){
+                bundle.putSerializable(INTENT_KEY_UPDATE_DIALOG_LISTENER,mUpdateDialogListener);
             }
 
             if (mUpdateBean!=null && mUpdateBean.isUpdate()){
