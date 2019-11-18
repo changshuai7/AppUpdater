@@ -30,7 +30,7 @@ public class UpdateConfig implements Parcelable {
     private boolean isSound;                        //是否铃声提示,为true时使用通知默认铃声
     private Integer mVersionCode;                   //要下载的APK的versionCode
     private Map<String,String> mRequestProperty;    //下载请求头参数
-    private boolean isDeleteCancelFile = true;      //是否删除取消下载的文件
+    private boolean isDeleteCancelFile = true;      //是否删除取消下载的文件 //TODO 这个好像无效。
 
     public UpdateConfig() {
 

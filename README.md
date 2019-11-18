@@ -11,6 +11,11 @@ BUG:路径位置不可配置。默认路径在哪里？
 
 TextUtils.isEmpty替换成LangUtil.
 
-增加一个安装并校验MD5的InstallApkWithCheckMD5的方法。考虑是否将“是否校验”作为参数true/false传入
+关注Toast的非UI线程弹出问题。
+
+
+不允许降级安装的路基
+
+配置一次性配置，不要传入过多。
 
 

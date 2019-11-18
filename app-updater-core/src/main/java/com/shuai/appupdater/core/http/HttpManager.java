@@ -3,12 +3,9 @@ package com.shuai.appupdater.core.http;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.shuai.appupdater.core.constant.Constants;
-import com.shuai.appupdater.core.util.AppUtils;
-import com.shuai.appupdater.core.util.Md5Util;
 import com.shuai.appupdater.core.util.SSLSocketFactoryUtils;
 
 import java.io.File;
@@ -21,7 +18,11 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-
+/**
+ *
+ * 此类用于执行下载任务 并返回结果
+ *
+ */
 public class HttpManager implements IHttpManager {
 
     private static final int DEFAULT_TIME_OUT = 20000;
@@ -144,16 +145,6 @@ public class HttpManager implements IHttpManager {
                     is.close();
 
                     connect.disconnect();
-
-
-                    Log.d("被下载文件的MD5 --> ", Md5Util.getFileMD5(file));
-
-                    // TODO 考虑要在这个位置去校验吗？
-                    if (!TextUtils.isEmpty(fileMd5)){//fileMd5不为空，则校验md5
-                        if (!AppUtils.INSTANCE.checkApkMd5(fileMd5,file)){
-                            throw new Exception("MD5校验不通过");
-                        }
-                    }
 
                     return file;
                 }else {//连接失败

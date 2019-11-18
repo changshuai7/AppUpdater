@@ -28,6 +28,7 @@ import com.shuai.appupdater.core.constant.Constants;
 import com.shuai.appupdater.core.http.HttpManager;
 import com.shuai.appupdater.core.http.IHttpManager;
 import com.shuai.appupdater.core.util.AppUtils;
+import com.shuai.appupdater.core.util.Md5Util;
 
 import java.io.File;
 
@@ -80,7 +81,7 @@ public class DownloadService extends Service {
      * 开始下载
      * @param config
      * @param httpManager
-     * @param callback
+     * @param callback  给到前台App的callback
      */
     public void startDownload(UpdateConfig config,IHttpManager httpManager,UpdateCallback callback){
 
@@ -117,40 +118,61 @@ public class DownloadService extends Service {
         }
 
         mFile = new File(path,filename);
+
         if(mFile.exists()){//文件是否存在
             Integer versionCode = config.getVersionCode();
+            // 如果传入了versionCode，需要取缓存。
             if(versionCode!=null){
                 try{
+                    // 本地已经存在要下载的APK
                     if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,mFile)){
-                        //本地已经存在要下载的APK
                         Log.d(Constants.TAG,"CacheFile:" + mFile);
-                        if(config.isInstallApk()){
-                            String authority = config.getAuthority();
-                            if(TextUtils.isEmpty(authority)){//如果为空则默认
-                                authority = getContext().getPackageName() + ".fileProvider";
-                            }
-                            //TODO : 安装之前校验MD5.考虑是否将校验写在checkApkMd5中
-                            if (!TextUtils.isEmpty(config.getFileMD5())){
-                                if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
-                                    Toast.makeText(getContext(), "MD5校验不通过", Toast.LENGTH_SHORT).show();
-                                    return;
+
+                        //如果需要校验MD5
+                        if (!TextUtils.isEmpty(config.getFileMD5())){
+                            //MD5校验不通过，结果会异常终止
+                            if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
+                                Log.e(Constants.TAG,"缓存的APK的MD5校验不通过");
+                                //对于已下载的，需要检验MD5，但是MD5校验不通过的，需要删除文件.否则不删除会导致一直读取本地文件，一直MD5校验不通过而无法继续。
+                                boolean delete = mFile.delete();//delete：是否删除成功
+
+                                if (callback!=null){
+                                    callback.onError(new Exception("缓存的APK的MD5校验不通过"));
                                 }
+                                stopService();
+                                return;//----->因MD5异常而终止onError
                             }
+                        }
+
+                        //不需要检验MD5或者校验通过
+
+                        //如果需要弹出安装apk
+                        if (config.isInstallApk()){
+                            String authority = (!TextUtils.isEmpty(config.getAuthority()))?config.getAuthority():getContext().getPackageName() + ".fileProvider";
                             AppUtils.INSTANCE.installApk(getContext(),mFile,authority);
                         }
+
                         if(callback!=null){
                             callback.onFinish(mFile);
                         }
                         stopService();
-                        return;
+                        return;//----->因有缓存APK而终止onFinish
                     }
                 }catch (Exception e){
-                    Log.w(Constants.TAG,e);
+
+                    e.printStackTrace();
+                    if (callback!=null){
+                        callback.onError(e);
+                    }
+                    stopService();
+                    return;//----->因其他异常而终止onError
                 }
             }
-            //删除旧文件
-            mFile.delete();
+            //mFile无用，删除旧文件。
+            boolean delete = mFile.delete();
         }
+
+        //执行下载、安装等后续操作
         Log.d(Constants.TAG,"File:" + mFile);
 
         if(httpManager != null){
@@ -158,6 +180,8 @@ public class DownloadService extends Service {
         }else{
             mHttpManager = HttpManager.getInstance();
         }
+
+        // 去网络请求执行下载
         mHttpManager.download(url,path,filename,fileMd5,config.getRequestProperty(),new AppDownloadCallback(config,callback));
 
     }
@@ -195,6 +219,9 @@ public class DownloadService extends Service {
 
     //---------------------------------------- DownloadCallback
 
+    /**
+     * HttpManager下载回调
+     */
     public class AppDownloadCallback implements IHttpManager.DownloadCallback{
 
         public UpdateConfig config;
@@ -297,11 +324,25 @@ public class DownloadService extends Service {
         public void onFinish(File file) {
             Log.d(Constants.TAG,"onFinish:" + file);
             isDownloading = false;
+
+            Log.d("被下载文件的MD5 --> ", Md5Util.getFileMD5(file));
+
+            //如果需要校验MD5
+            if (!TextUtils.isEmpty(config.getFileMD5())){
+                //MD5校验不通过
+                if (!AppUtils.INSTANCE.checkApkMd5(config.getFileMD5(),mFile)){
+                    Log.e(Constants.TAG,"下载的APK的MD5校验不通过");
+
+                    //对于已下载的，需要检验MD5，但是MD5校验不通过的，需要删除文件.否则不删除会导致一直读取本地文件，一直MD5校验不通过而无法继续。
+                    boolean delete = mFile.delete();//delete：是否删除成功
+                    this.onError(new Exception("下载的APK的MD5校验不通过"));
+                    return;
+                }
+            }
+
             showFinishNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
+
             if(isInstallApk){
-
-                //TODO 这里校验MD5
-
                 AppUtils.INSTANCE.installApk(getContext(),file,authority);
             }
             if(callback!=null){

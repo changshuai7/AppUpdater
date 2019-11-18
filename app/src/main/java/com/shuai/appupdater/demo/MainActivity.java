@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         /**设置升级功能配置*/
         UpdateConfig config = new UpdateConfig();
         config.setUrl(mUrl);
-        config.setFileMD5("75E9EC2D28780E206DE8AD2068461664");
+        config.setFileMD5("1B64E40002948FF446D00517E59D9D49");
         config.setVersionCode(1);////设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
         config.addHeader("token", "xxxxxx");
         config.setReDownload(false);

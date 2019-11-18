@@ -210,7 +210,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
         } else {
             if (-1 == color) {
-////                自动提色.如果采用自动提色，则需要引入v7相关的包compile 'com.android.support:palette-v7:26.1.0'
+////                自动提色.如果采用自动提色，则需要引入v7相关的包：compile 'com.android.support:palette-v7:26.1.0'
 //                Palette.from(Util.drawableToBitmap(this.getResources().getDrawable(topResId))).generate(new Palette.PaletteAsyncListener() {
 //                    @Override
 //                    public void onGenerated(Palette palette) {
@@ -314,7 +314,13 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 mUpdateOkButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        //安装
+                                        //执行安装
+
+                                        //这里不选择调用updateApp()的原因是：
+                                        //1、如果下载完、跳转到安装页面，用户不安装而是直接返回，这时候如果配置的是没有选择使用缓存，调用updateApp()会重新下载。所以不可以用调用updateApp()方法
+                                        //2、如果用户选择了下载完不跳转安装界面。那么。用户点击此安装按钮，调用updateApp()会重新下载。所以不可以用调用updateApp()方法
+
+                                        //既然走到了onFinish，那么MD5一定是校验通过了。所以这里不需要再次校验MD5。直接安装即可。
                                         installApp(apkFile);
                                     }
                                 });
@@ -352,17 +358,10 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
 
     /**
      * 安装app
+     * 不校验MD5
      * @param file
      */
     private void installApp(File file){
-
-        //TODO 安装前是需要校验MD5的
-        if (!TextUtils.isEmpty(mUpdateConfig.getFileMD5())){
-            if (!AppUtils.INSTANCE.checkApkMd5(mUpdateConfig.getFileMD5(),file)){
-                Toast.makeText(mActivity, "MD5校验不通过", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
 
         String authority = mUpdateConfig.getAuthority();
         if(TextUtils.isEmpty(authority)){//如果为空则默认
