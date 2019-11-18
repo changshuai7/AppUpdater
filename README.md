@@ -24,7 +24,7 @@ dependencies {
         //核心库，必须依赖。
         implementation 'com.shuai:app-updater-core:version'
         //弹框库，选择依赖。
-        implementation 'com.shuai:app-updater-core:version'
+        implementation 'com.shuai:app-updater-dialog:version'
 }
 
 版本号version 一般采用Tag中最新的版本。两者同步更新
