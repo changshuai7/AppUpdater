@@ -21,7 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.shuai.app.updater.R;
+import com.shuai.appupdater.core.R;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;
 import com.shuai.appupdater.core.constant.Constants;

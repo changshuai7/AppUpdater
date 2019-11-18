@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog;
+package com.shuai.appupdater.dialog;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,7 +15,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,11 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shuai.app.appupdater.dialog.utils.Util;
-import com.shuai.app.dialog.R;
-import com.shuai.app.appupdater.dialog.utils.ColorUtil;
-import com.shuai.app.appupdater.dialog.utils.DrawableUtil;
-import com.shuai.app.appupdater.dialog.widget.NumberProgressBar;
+import com.shuai.appupdater.dialog.utils.Util;
+import com.shuai.appupdater.dialog.R;
+import com.shuai.appupdater.dialog.utils.ColorUtil;
+import com.shuai.appupdater.dialog.utils.DrawableUtil;
+import com.shuai.appupdater.dialog.widget.NumberProgressBar;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;

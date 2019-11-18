@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog;
+package com.shuai.appupdater.dialog;
 
 import android.app.Activity;
 

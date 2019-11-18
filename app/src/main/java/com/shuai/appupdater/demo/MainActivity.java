@@ -9,9 +9,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.shuai.app.appupdater.dialog.UpdateBean;
-import com.shuai.app.appupdater.dialog.UpdateManager;
-import com.shuai.appupdater.demo.R;
+import com.shuai.appupdater.dialog.UpdateBean;
+import com.shuai.appupdater.dialog.UpdateManager;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.AppUpdateCallback;

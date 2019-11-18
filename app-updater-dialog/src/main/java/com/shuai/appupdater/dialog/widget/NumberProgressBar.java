@@ -1,4 +1,4 @@
-package com.shuai.app.appupdater.dialog.widget;
+package com.shuai.appupdater.dialog.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +11,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.shuai.app.dialog.R;
+import com.shuai.appupdater.dialog.R;
 
 
 /**
