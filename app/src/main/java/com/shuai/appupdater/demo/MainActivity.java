@@ -128,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClickDialogCancel(View view) {
                 Toast.makeText(MainActivity.this, "点击了取消更新", Toast.LENGTH_SHORT).show();
             }
+            // 必要权限被拒绝
+            @Override
+            public void onPermissionDenied() {
+                Toast.makeText(MainActivity.this, "必要权限被拒绝！", Toast.LENGTH_LONG).show();
+            }
+
             // 在开始下载前调用(在onStart之前调用) true 表示已经在下载，false表示准备刚调用下载
             @Override
             public void onUpdateIsDownloading(boolean isDownloading) {

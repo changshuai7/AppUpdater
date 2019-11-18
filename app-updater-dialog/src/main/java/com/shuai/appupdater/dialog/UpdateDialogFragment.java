@@ -44,7 +44,6 @@ import java.io.File;
  * 版本升级弹框
  */
 public class UpdateDialogFragment extends DialogFragment implements View.OnClickListener {
-    public static final String TIPS = "请授权访问存储空间权限，否则App无法更新";
     public static boolean isShow = false;   //弹框是否展示出来了
 
     private UpdateBean mUpdateBean;
@@ -255,9 +254,11 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             //权限判断是否有访问外部存储空间权限
             int flag = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (flag != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // 用户拒绝过这个权限了，应该提示用户，为什么需要这个权限。
-                    Toast.makeText(getActivity(), TIPS, Toast.LENGTH_LONG).show();
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {//如果禁止权限不在询问
+                    // 在小米手机上有点恶心，shouldShowRequestPermissionRationale一律返回了true.TMD
+                    // 用户拒绝过这个权限了，勾选了禁止权限不再询问，应该提示用户，为什么需要这个权限。
+                    mUpdateDialogListener.onPermissionDenied();
+                    dismiss();
                 } else {
                     // 申请授权。
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -389,7 +390,7 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                 updateApp();
             } else {
                 //提示，并且关闭
-                Toast.makeText(getActivity(), TIPS, Toast.LENGTH_LONG).show();
+                mUpdateDialogListener.onPermissionDenied();
                 dismiss();
 
             }

@@ -300,16 +300,6 @@ public class AppUpdater {
             return this;
         }
 
-        /**
-         *  设置是否自动删除取消下载的文件
-         * @param isDeleteCancelFile 是否删除取消下载的文件（默认为true）
-         * @return
-         */
-        public Builder setDeleteCancelFile(boolean isDeleteCancelFile){
-            mConfig.setDeleteCancelFile(isDeleteCancelFile);
-            return this;
-        }
-
         public AppUpdater build(@NonNull Context context){
             AppUpdater appUpdater = new AppUpdater(context,mConfig);
             return appUpdater;

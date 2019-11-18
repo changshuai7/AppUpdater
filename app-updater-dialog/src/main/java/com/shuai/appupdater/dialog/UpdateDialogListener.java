@@ -12,6 +12,8 @@ public interface UpdateDialogListener extends Serializable {
 
     void onClickDialogCancel(View view);        //点击弹框取消
 
+    void onPermissionDenied();                  //权限拒绝
+
     void onUpdateIsDownloading(boolean isDownloading);            //下载之前，onStart之前，检查是否正在下载
 
     void onUpdateStart(String url);             //升级下载开始
