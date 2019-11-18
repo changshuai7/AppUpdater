@@ -49,4 +49,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     implementation project(':app-updater-core')
     implementation project(':app-updater-dialog')
+//    //核心库，必须依赖。
+//    implementation 'com.shuai:app-updater-core:0.0.1'
+//    //弹框库，选择依赖。
+//    implementation 'com.shuai:app-updater-dialog:0.0.1'
 }
