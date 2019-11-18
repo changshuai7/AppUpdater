@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.shuai.appupdater.core.http.HttpManager;
+import com.shuai.appupdater.core.http.IHttpManager;
 import com.shuai.appupdater.dialog.UpdateBean;
 import com.shuai.appupdater.dialog.UpdateDialogBean;
 import com.shuai.appupdater.dialog.UpdateDialogListener;
@@ -23,6 +26,7 @@ import com.shuai.appupdater.core.constant.Constants;
 import com.shuai.appupdater.core.util.PermissionUtils;
 
 import java.io.File;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPath(Environment.getExternalStorageDirectory() + File.separator + "MyApp")
                 //配置下载文件的命名，若不配置，则取URL上声明的名字
                 .setFilename("test.apk")
-                //设置要下载的VersionCode,设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。不设置则不读取缓存。
+                //设置要下载的VersionCode,设置versionCode之后，版本相同的apk只下载一次,优先取本地缓存。不设置则不读取缓存。
                 .setVersionCode(1)
                 //设置下载的请求头。有些特殊的下载地址需要配置请求头，请在这里添加
                 .addHeader("header-test", "header1")
@@ -203,8 +207,19 @@ public class MainActivity extends AppCompatActivity {
         config.setSound(true);
         config.setUrl(mUrl);
         config.addHeader("header-test", "header");
-        mAppUpdater = new AppUpdater(getContext(), config)
-                .setUpdateCallback(new UpdateCallback() {
+        mAppUpdater = new AppUpdater(getContext(), config);
+//        mAppUpdater.setHttpManager(new IHttpManager() {
+//            @Override
+//            public void download(String url, String path, String filename, String fileMd5, @Nullable Map<String, String> requestProperty, DownloadCallback callback) {
+//                //执行更新操作
+//            }
+//
+//            @Override
+//            public void cancel() {
+//                //取消更新操作
+//            }
+//        });
+        mAppUpdater.setUpdateCallback(new UpdateCallback() {
 
                     @Override
                     public void onDownloading(boolean isDownloading) {
