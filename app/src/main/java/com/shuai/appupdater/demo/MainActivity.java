@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             // 必要权限被拒绝
             @Override
             public void onPermissionDenied() {
+                //小米手机有点恶心，为保证库正常工作，请请务必先获取到相关权限。
                 Toast.makeText(MainActivity.this, "必要权限被拒绝！", Toast.LENGTH_LONG).show();
             }
 
