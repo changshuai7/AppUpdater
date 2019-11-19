@@ -40,7 +40,7 @@ ext {
 
     userOrg = 'shuai'
     groupId = 'com.shuai'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
 
 }
 
