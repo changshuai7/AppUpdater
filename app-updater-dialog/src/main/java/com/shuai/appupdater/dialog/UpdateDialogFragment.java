@@ -26,17 +26,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shuai.appupdater.dialog.utils.Util;
 import com.shuai.appupdater.dialog.R;
 import com.shuai.appupdater.dialog.utils.ColorUtil;
 import com.shuai.appupdater.dialog.utils.DrawableUtil;
-import com.shuai.appupdater.dialog.widget.NumberProgressBar;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;
 import com.shuai.appupdater.core.util.AppUtils;
+import com.shuai.appupdater.dialog.widget.progress.NumberProgressBar;
 
 import java.io.File;
 

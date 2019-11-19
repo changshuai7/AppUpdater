@@ -32,7 +32,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
-    private String mUrl = "http://7jpqno.com2.z0.glb.clouddn.com/motion/1573991245851/App_Updater.apk";
+    private String mUrl = "https://misc.rrcimg.com/salesorder20190923160211.apk";
     private ProgressBar progressBar;
     private Toast toast;
     private AppUpdater mAppUpdater;
