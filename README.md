@@ -195,10 +195,18 @@ UpdateDialogBean为版本更新弹窗的样式配置
 /**设置和弹框相关的*/
 UpdateDialogBean dialogBean = new UpdateDialogBean()
         //设置弹框的主题色.包括按钮,进度条的颜色等.不设置默认是红色按钮
-        //.setThemeColor(getResources().getColor(R.color.colorAccent))
+        .setThemeColor(getResources().getColor(R.color.colorAccent))
         //设置弹框的顶部图片.不设置默认是红色火箭头
         .setTopPic(R.mipmap.lib_update_app_top_bg);
 ```
+注意：
+
+
+1、顶部图片建议尺寸比例保持30:13。为保证样式的协调，任何尺寸图片会被强制拉伸到30:13的比例。
+
+
+2、弹框同时提供了横屏竖屏两套布局，但不支持横竖屏切换时状态的保存（此处有优化空间，后续想办法解决）。建议在应用中强制横屏，或者强制竖屏。
+
 
 #### 步骤四：配置UpdateDialogListener（可选）
 UpdateDialogListener为版本更新中，弹框的点击事件、下载的进度、权限的拒绝等事件的监听配置。

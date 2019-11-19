@@ -23,5 +23,6 @@
     </application>
 
 
+    <!--android:configChanges="orientation|screenSize|keyboardHidden"-->
 
 </manifest>

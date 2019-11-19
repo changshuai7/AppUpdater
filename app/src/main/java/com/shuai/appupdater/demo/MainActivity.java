@@ -109,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
                                 "2、bug都是petter写的\n" +
                                 "3、CS最帅\n" +
                                 "4、吊炸天的帅气\n" +
-                                "5、上官婉儿无敌帅\n");
+                                "5、上官婉儿无敌帅\n"+
+                                "6、上官婉儿无敌帅\n"+
+                                "7、优化性能\n"+
+                                "8、稳定性提升\n");
 
 
         /**设置和弹框相关的*/
@@ -117,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 //设置弹框的主题色.包括按钮,进度条的颜色等
                 //.setThemeColor(getResources().getColor(R.color.colorAccent))
                 //设置弹框的顶部图片.不设置默认是红色火箭头
-                .setTopPic(R.mipmap.lib_update_app_top_bg);
+                //.setTopPic(R.mipmap.test_update_app_top_bg)
+         ;
 
         /**监听弹框的点击和升级回调等事件*/
         UpdateDialogListener listener = new UpdateDialogListener() {

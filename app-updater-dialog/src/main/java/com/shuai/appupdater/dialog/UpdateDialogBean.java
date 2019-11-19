@@ -11,7 +11,7 @@ import android.support.annotation.DrawableRes;
 public class UpdateDialogBean implements Parcelable {
 
     //设置按钮，进度条的颜色
-    private int mThemeColor = 0;  //TODO 考虑能否统一用R.mipmap形式传入
+    private int mThemeColor = 0;
     //顶部的图片
     private
     @DrawableRes

@@ -303,9 +303,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                     public void onProgress(int progress, int total, boolean isChange) {
                         if (isChange) {
                             if (!UpdateDialogFragment.this.isRemoving()) {
+                                int currProgress = Math.round(progress * 1.0f / total * 100.0f);
                                 mNumberProgressBar.setVisibility(View.VISIBLE);
-                                mNumberProgressBar.setProgress(/*Math.round(progress * 100)*/progress);
-                                mNumberProgressBar.setMax(total);
+                                mNumberProgressBar.setProgress(currProgress);
                                 mUpdateOkButton.setVisibility(View.GONE);
                             }
                         }
