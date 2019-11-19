@@ -24,7 +24,6 @@ public class UpdateConfig implements Parcelable {
     private String mChannelId;                      //通知栏渠道ID
     private String mChannelName;                    //通知栏渠道名称
     private String mAuthority;                      //默认{@link Context#getPackageName() + ".fileProvider"}
-    private boolean isReDownload = false;           //下载失败是否支持点击通知栏重复下载.默认false-->true有bug
     private boolean isShowPercentage = true;        //是否显示百分比
     private boolean isVibrate;                      //是否震动提示，为true时使用通知默认震动
     private boolean isSound;                        //是否铃声提示,为true时使用通知默认铃声
@@ -147,14 +146,6 @@ public class UpdateConfig implements Parcelable {
         return this;
     }
 
-    public boolean isReDownload() {
-        return isReDownload;
-    }
-
-    public UpdateConfig setReDownload(boolean reDownload) {
-        isReDownload = reDownload;
-        return this;
-    }
 
     public boolean isVibrate() {
         return isVibrate;
@@ -224,7 +215,6 @@ public class UpdateConfig implements Parcelable {
         dest.writeString(this.mChannelId);
         dest.writeString(this.mChannelName);
         dest.writeString(this.mAuthority);
-        dest.writeByte(this.isReDownload ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
@@ -250,7 +240,6 @@ public class UpdateConfig implements Parcelable {
         this.mChannelId = in.readString();
         this.mChannelName = in.readString();
         this.mAuthority = in.readString();
-        this.isReDownload = in.readByte() != 0;
         this.isShowPercentage = in.readByte() != 0;
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;

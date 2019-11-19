@@ -19,8 +19,6 @@ public final class Constants {
 
     public static final String KEY_STOP_DOWNLOAD_SERVICE = "stop_download_service";
 
-    public static final String KEY_RE_DOWNLOAD = "app_update_re_download";
-
     public static final String DEFAULT_DIR_PATH = Environment.getExternalStorageDirectory() + File.separator + ".AppUpdater";
 
     public static final int RE_CODE_STORAGE_PERMISSION = 0x66;
