@@ -38,7 +38,6 @@ public class DownloadService extends Service {
     private boolean isDownloading;      //是否在下载，防止重复下载。
     private int mLastProgress = -1;     //最后更新进度，用来降频刷新
     private long mLastTime;             //最后进度更新时间，用来降频刷新
-    private int mCount = 0;             //失败后重新下载次数
 
     private IHttpManager mHttpManager;
     private File mFile;
@@ -55,14 +54,8 @@ public class DownloadService extends Service {
             if(isStop){
                 stopDownload();
             } else if(!isDownloading){
-                //是否实通过通知栏触发重复下载
-                boolean isReDownload = intent.getBooleanExtra(Constants.KEY_RE_DOWNLOAD,false);
-                if(isReDownload){
-                    mCount++;
-                }
                 //获取配置信息
                 UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
-                //TODO :BUG:通过通知栏重试启动服务的，没法传递HttpManager和Callback。导致:外部传入HttpManager或者有进度回调的，无法生效。
                 startDownload(config,null,null);
             }else{
                 Log.d(Constants.TAG,"onStartCommand:请勿重复执行下载..");
@@ -211,7 +204,6 @@ public class DownloadService extends Service {
      * 停止服务
      */
     private void stopService(){
-        mCount = 0;
         stopSelf();
     }
 
@@ -241,8 +233,6 @@ public class DownloadService extends Service {
 
         private boolean isShowPercentage;
 
-        private boolean isReDownload;
-
         private UpdateCallback callback;
 
 
@@ -270,7 +260,6 @@ public class DownloadService extends Service {
             }
 
             this.isShowPercentage = config.isShowPercentage();
-            this.isReDownload = config.isReDownload();
 
         }
 
@@ -354,17 +343,14 @@ public class DownloadService extends Service {
         public void onError(Exception e) {
             Log.w(Constants.TAG,e);
             isDownloading = false;
-            //支持下载失败重新并最多支持失败下载3次
-            boolean isReDownload = this.isReDownload && mCount < 3;
-            String content = isReDownload ? getString(R.string.app_updater_error_notification_content_re_download) : getString(R.string.app_updater_error_notification_content);
-            showErrorNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,isReDownload,config);
+
+            String content = getString(R.string.app_updater_error_notification_content);
+            showErrorNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,config);
 
             if(callback!=null){
                 callback.onError(e);
             }
-            if(!isReDownload){
-                stopService();
-            }
+            stopService();
 
         }
 
@@ -474,25 +460,14 @@ public class DownloadService extends Service {
      * @param icon
      * @param title
      * @param content
-     * @param isReDownload
      * @param config
      */
-    private void showErrorNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isReDownload,UpdateConfig config){
+    private void showErrorNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,UpdateConfig config){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
         builder.setAutoCancel(true);
 
-        //TODO:此处有bug：下载失败以后，重新下载，无法回调下载进度。除了用EventBus等方式传递消息以外，暂无好的解决办法......同时也无法使用外部传入的HttpManager
-
-        if(isReDownload){//重新下载
-            Intent intent  = new Intent(getContext(),DownloadService.class);
-            intent.putExtra(Constants.KEY_RE_DOWNLOAD,true);
-            intent.putExtra(Constants.KEY_UPDATE_CONFIG,config);
-            PendingIntent clickIntent = PendingIntent.getService(getContext(), notifyId,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(clickIntent);
-        }else{
-            PendingIntent clickIntent = PendingIntent.getService(getContext(), notifyId,new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(clickIntent);
-        }
+        PendingIntent clickIntent = PendingIntent.getService(getContext(), notifyId,new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(clickIntent);
 
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_AUTO_CANCEL;

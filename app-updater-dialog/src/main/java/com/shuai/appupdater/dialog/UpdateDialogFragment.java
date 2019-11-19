@@ -26,17 +26,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shuai.appupdater.dialog.utils.Util;
 import com.shuai.appupdater.dialog.R;
 import com.shuai.appupdater.dialog.utils.ColorUtil;
 import com.shuai.appupdater.dialog.utils.DrawableUtil;
-import com.shuai.appupdater.dialog.widget.NumberProgressBar;
 import com.shuai.appupdater.core.AppUpdater;
 import com.shuai.appupdater.core.UpdateConfig;
 import com.shuai.appupdater.core.callback.UpdateCallback;
 import com.shuai.appupdater.core.util.AppUtils;
+import com.shuai.appupdater.dialog.widget.progress.NumberProgressBar;
 
 import java.io.File;
 
@@ -303,9 +302,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                     public void onProgress(int progress, int total, boolean isChange) {
                         if (isChange) {
                             if (!UpdateDialogFragment.this.isRemoving()) {
+                                int currProgress = Math.round(progress * 1.0f / total * 100.0f);
                                 mNumberProgressBar.setVisibility(View.VISIBLE);
-                                mNumberProgressBar.setProgress(/*Math.round(progress * 100)*/progress);
-                                mNumberProgressBar.setMax(total);
+                                mNumberProgressBar.setProgress(currProgress);
                                 mUpdateOkButton.setVisibility(View.GONE);
                             }
                         }

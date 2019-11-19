@@ -259,16 +259,6 @@ public class AppUpdater {
         }
 
         /**
-         * 设置下载失败是是否支持点击通知栏重新下载
-         * @param reDownload 下载失败时是否支持点击通知栏重新下载，默认true 最多重新下载3次
-         * @return
-         */
-        public Builder setReDownload(boolean reDownload) {
-            mConfig.setReDownload(reDownload);
-            return this;
-        }
-
-        /**
          * 设置要下载APK的versionCode
          * @param versionCode 为null表示不处理，默认不存在则下载，存在则重新下载。不为null时，表示会优先校验本地是否存在已下载版本号为versionCode的APK。
          *                    如果存在则不会重新下载(AppUpdater会自动校验packageName一致性)，直接取本地APK，反之重新下载。

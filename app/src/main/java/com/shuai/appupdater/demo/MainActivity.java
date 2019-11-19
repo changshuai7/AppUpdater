@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,7 +31,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
-    private String mUrl = "http://7jpqno.com2.z0.glb.clouddn.com/motion/1573991245851/App_Updater.apk";
+    private String mUrl = "http://7jpqno.com2.z0.glb.clouddn.com/motion/1574150086121/app-debug.apk";
     private ProgressBar progressBar;
     private Toast toast;
     private AppUpdater mAppUpdater;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 //配置升级下载地址URL
                 .setUrl(mUrl)
                 //配置要下载的MD5，如果校验不通过，则执行异常回调。不传入则默认不校验
-                .setFileMD5("1B64E40002948FF446D00517E59D9D49")
+                .setFileMD5("5A9AC838362E825DEC02EF7DC8CFAE2F")
                 //配置下载地址，若不配置，则存储在默认的位置
                 .setPath(Environment.getExternalStorageDirectory() + File.separator + "MyApp")
                 //配置下载文件的命名，若不配置，则取URL上声明的名字
@@ -109,7 +108,10 @@ public class MainActivity extends AppCompatActivity {
                                 "2、bug都是petter写的\n" +
                                 "3、CS最帅\n" +
                                 "4、吊炸天的帅气\n" +
-                                "5、上官婉儿无敌帅\n");
+                                "5、上官婉儿无敌帅\n"+
+                                "6、上官婉儿无敌帅\n"+
+                                "7、优化性能\n"+
+                                "8、稳定性提升\n");
 
 
         /**设置和弹框相关的*/
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 //设置弹框的主题色.包括按钮,进度条的颜色等
                 //.setThemeColor(getResources().getColor(R.color.colorAccent))
                 //设置弹框的顶部图片.不设置默认是红色火箭头
-                .setTopPic(R.mipmap.lib_update_app_top_bg);
+                //.setTopPic(R.mipmap.test_update_app_top_bg)
+         ;
 
         /**监听弹框的点击和升级回调等事件*/
         UpdateDialogListener listener = new UpdateDialogListener() {
