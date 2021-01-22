@@ -183,6 +183,8 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             if (!TextUtils.isEmpty(targetSize)) {
                 mTvApkSize.setVisibility(View.VISIBLE);
                 mTvApkSize.setText(String.format("新版本大小：%s", targetSize));
+            }else{
+                mTvApkSize.setVisibility(View.GONE);
             }
 
             //标题
@@ -256,7 +258,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {//如果禁止权限不在询问
                     // 在小米手机上有点恶心，shouldShowRequestPermissionRationale一律返回了true.TMD
                     // 用户拒绝过这个权限了，勾选了禁止权限不再询问，应该提示用户，为什么需要这个权限。
-                    mUpdateDialogListener.onPermissionDenied();
+                    if (mUpdateDialogListener!=null) {
+                        mUpdateDialogListener.onPermissionDenied();
+                    }
                     dismiss();
                 } else {
                     // 申请授权。
@@ -266,11 +270,15 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
             } else {
                 updateApp();
             }
-            mUpdateDialogListener.onClickDialogConfirm(view);
+            if (mUpdateDialogListener!=null) {
+                mUpdateDialogListener.onClickDialogConfirm(view);
+            }
 
         } else if (i == R.id.iv_close) {
             dismiss();
-            mUpdateDialogListener.onClickDialogCancel(view);
+            if (mUpdateDialogListener!=null){
+                mUpdateDialogListener.onClickDialogCancel(view);
+            }
         }
     }
 
@@ -286,7 +294,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                     @Override
                     public void onDownloading(boolean isDownloading) {
 
-                        mUpdateDialogListener.onUpdateIsDownloading(isDownloading);
+                        if (mUpdateDialogListener!=null) {
+                            mUpdateDialogListener.onUpdateIsDownloading(isDownloading);
+                        }
                     }
 
                     @Override
@@ -295,7 +305,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                         mNumberProgressBar.setVisibility(View.VISIBLE);
                         mUpdateOkButton.setVisibility(View.GONE);
 
-                        mUpdateDialogListener.onUpdateStart(url);
+                        if (mUpdateDialogListener!=null){
+                            mUpdateDialogListener.onUpdateStart(url);
+                        }
                     }
 
                     @Override
@@ -308,7 +320,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 mUpdateOkButton.setVisibility(View.GONE);
                             }
                         }
-                        mUpdateDialogListener.onUpdateProgress(progress,total,isChange);
+                        if (mUpdateDialogListener!=null){
+                            mUpdateDialogListener.onUpdateProgress(progress,total,isChange);
+                        }
                     }
 
                     @Override
@@ -336,7 +350,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 dismissAllowingStateLoss();
                             }
                         }
-                        mUpdateDialogListener.onUpdateFinish(file);
+                        if (mUpdateDialogListener!=null){
+                            mUpdateDialogListener.onUpdateFinish(file);
+                        }
                     }
 
                     @Override
@@ -354,13 +370,17 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                                 }
                             });
                         }
-                        mUpdateDialogListener.onUpdateError(e);
+                        if (mUpdateDialogListener!=null){
+                            mUpdateDialogListener.onUpdateError(e);
+                        }
                     }
 
                     @Override
                     public void onCancel() {
                         mNumberProgressBar.setVisibility(View.INVISIBLE);
-                        mUpdateDialogListener.onUpdateCancel();
+                        if (mUpdateDialogListener!=null){
+                            mUpdateDialogListener.onUpdateCancel();
+                        }
                     }
                 });
         mAppUpdater.start();
@@ -389,7 +409,9 @@ public class UpdateDialogFragment extends DialogFragment implements View.OnClick
                 updateApp();
             } else {
                 //提示，并且关闭
-                mUpdateDialogListener.onPermissionDenied();
+                if (mUpdateDialogListener!=null){
+                    mUpdateDialogListener.onPermissionDenied();
+                }
                 dismiss();
 
             }
